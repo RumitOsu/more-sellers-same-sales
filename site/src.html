@@ -8,6 +8,7 @@
 <meta property="og:title" content="More Sellers, Same Sales — Timur Kherlenbayar">
 <meta property="og:description" content="A business review written for a leadership team, with an executive summary, the evidence behind it and four recommendations, built from about 100,000 real marketplace orders.">
 <title>More Sellers, Same Sales — Timur Kherlenbayar</title>
+<script>document.documentElement.classList.add('js');</script>
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../../assets/fonts/type-home.css">
 <style>
@@ -275,15 +276,233 @@ footer.end p { margin: 0; max-width: 620px; }
 @media (prefers-reduced-motion: no-preference) {
   .meter .fill, .tile { transition: width .5s ease, background-color .25s ease; }
 }
+
+/* ---------- Second pass: motion, interaction and a lighter read ---------- */
+#progress { position: fixed; top: 0; left: 0; z-index: 30; width: 100%; height: 3px; background: var(--orange); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* Things fade up as they come into view, and their charts animate once they have. */
+.js .anim { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1); }
+.js .anim.in { opacity: 1; transform: none; }
+.grow { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
+.js .anim:not(.in) .grow { transform: scaleY(0); }
+.draw { stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 2s ease; }
+.js .anim:not(.in) .draw { stroke-dashoffset: 1; }
+.pop { transition: opacity .5s ease 1.6s; }
+.js .anim:not(.in) .pop { opacity: 0; }
+.js .anim:not(.in) .meter .fill { width: 0 !important; }
+.meter .fill { transition: width .9s cubic-bezier(.2, .8, .2, 1) .15s; }
+.waffle i.back { transition: background-color .4s ease 1s, transform .4s ease 1s; }
+.js .anim:not(.in) .waffle i.back { background: #dfe3ea; transform: scale(.6); }
+
+/* Cover */
+.cover { padding-bottom: 160px; background: radial-gradient(900px 500px at 85% 10%, #1b4580 0%, transparent 60%), var(--navy); }
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 60px); align-items: center; }
+.cover h1 { margin-bottom: 18px; }
+.cover .dek { margin-bottom: 26px; }
+.hero-actions, .play-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.cta { display: inline-block; font: 700 15px/1 var(--sans); color: var(--navy); background: #fff; border: 1px solid #fff; border-radius: 9px; padding: 13px 18px; text-decoration: none; cursor: pointer; transition: transform .15s ease, background-color .15s ease, opacity .15s ease; }
+.cta:hover { transform: translateY(-1px); color: var(--navy); background: #e6effb; }
+.cta.ghost { background: transparent; color: #fff; border-color: #5b7fb3; }
+.cta.ghost:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+.cta[hidden] { display: none; }
+.cta[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+details.about { margin-top: 26px; border-left: 3px solid #4b79b8; padding: 2px 0 2px 16px; max-width: 620px; }
+details.about summary { cursor: pointer; font-weight: 700; color: #dbe5f3; font-size: 15px; }
+details.about p { margin: 10px 0 0; }
+.hero-fig { margin: 0; }
+.hero-fig figcaption { font-size: 13px; color: #9fb6d6; margin-top: 4px; }
+.summary { margin-top: -110px; }
+
+/* Summary: each finding points at what to do about it */
+.pairs { border-top: 1px solid var(--rule); padding-top: 22px; margin-top: 4px; }
+.pairs-head, .pair-row { display: grid; grid-template-columns: 1fr 34px 1fr; gap: 14px; align-items: center; }
+.pairs-head span { font: 700 13px/1.3 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); padding: 0 16px 6px; }
+.pair-row { text-decoration: none; color: inherit; border-radius: 12px; margin-top: 8px; transition: transform .18s ease; }
+.pair-row > div { background: #f7f6f2; border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; height: 100%; transition: border-color .18s ease, box-shadow .18s ease; }
+.pair-row > div.do { background: var(--blue-wash); border-color: #cfe0f7; }
+.pair-row b { display: block; font-size: 16.5px; line-height: 1.3; color: var(--ink); }
+.pair-row p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+.pair-row i { font: 700 22px/1 var(--sans); color: var(--blue); text-align: center; font-style: normal; transition: transform .18s ease; }
+.pair-row:hover { color: inherit; }
+.pair-row:hover i { transform: translateX(5px); }
+.pair-row:hover > div.do { border-color: var(--blue); box-shadow: 0 6px 18px -10px rgba(42, 120, 214, .7); }
+
+/* Dark panels hold the parts you can play with */
+.play { background: radial-gradient(700px 380px at 90% 0%, #1b4580 0%, transparent 65%), var(--navy); color: #dbe5f3; border-radius: 18px; padding: clamp(22px, 4vw, 44px); box-shadow: 0 26px 60px -34px rgba(15, 42, 77, .8); }
+.play .label { color: #9fb6d6; }
+.play h2, .play h3 { color: #fff; font: 600 clamp(24px, 3vw, 34px)/1.18 var(--serif); margin: 12px 0 12px; max-width: 800px; }
+.play > p { max-width: 720px; color: #c8d5e8; }
+.play-actions { margin-top: 16px; }
+.play-out { margin: 18px 0 0; font: 400 clamp(17px, 1.8vw, 20px)/1.5 var(--serif); color: #fff; min-height: 1.5em; max-width: 760px; }
+#draw { margin-top: 10px; touch-action: pan-y; }
+#draw .zone { cursor: crosshair; touch-action: none; }
+#draw .actual { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease; }
+
+/* Sellers times sales per seller */
+.eq { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: center; margin-top: 8px; }
+.eq > i { font: 400 34px/1 var(--serif); color: var(--muted); font-style: normal; }
+.eq-tile { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 22px 18px; text-align: center; border-top: 5px solid var(--blue); }
+.eq-tile.down { border-top-color: var(--orange); }
+.eq-tile.total { background: var(--navy); border-color: var(--navy); border-top-color: var(--orange); }
+.eq-tile b { display: block; font: 700 clamp(34px, 5vw, 56px)/1 var(--sans); color: var(--ink); letter-spacing: -.02em; }
+.eq-tile span { display: block; margin-top: 8px; font-size: 15px; color: var(--muted); font-weight: 500; }
+.eq-tile.total b { color: #fff; }
+.eq-tile.total span { color: #b9c9df; }
+.eq-note { font-size: 13.5px; color: var(--muted); margin: 10px 0 22px; text-align: center; }
+
+/* 200 orders as dots */
+.dots { display: flex; flex-wrap: wrap; gap: 22px 30px; align-items: flex-start; margin: 6px 0 4px; }
+.dgroup { cursor: default; }
+.dgroup-head { font-size: 13.5px; line-height: 1.3; color: var(--ink); font-weight: 700; margin-bottom: 8px; }
+.dgroup-head span { display: block; font-weight: 500; color: var(--muted); }
+.dgrid { display: grid; gap: 4px; }
+.dgrid i { width: 13px; height: 13px; border-radius: 50%; background: #c5cad3; transition: background-color .35s ease, transform .35s ease; }
+.dgroup.wrong .dgrid i { background: #8fb4e6; }
+.dots.show-bad .dgrid i.b { background: var(--orange); transform: scale(1.12); }
+.dots.show-bad .dgrid i:not(.b) { background: #e4e6ea; }
+.dots-say { font: 400 clamp(17px, 1.8vw, 19.5px)/1.5 var(--serif); color: var(--ink); margin: 16px 0 4px; min-height: 3em; }
+details.nums .kinds { margin-top: 14px; }
+
+/* Big-number cards */
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
+.stat-row.two { grid-template-columns: 1fr 1fr; }
+.stat { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 22px 8px; border-top: 4px solid var(--blue); }
+.stat > b { display: block; font: 700 clamp(30px, 4vw, 44px)/1.05 var(--sans); color: var(--navy); letter-spacing: -.02em; margin-bottom: 10px; white-space: nowrap; }
+.stat p { font-size: 15.5px; line-height: 1.55; }
+.stat-row.nots .stat { border-top-color: var(--grey-mark); padding-top: 16px; }
+
+/* Sliders */
+.levers { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(20px, 4vw, 48px); align-items: center; margin-top: 22px; }
+.lever { padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, .14); }
+.lever:first-child { border-top: 0; }
+.lever-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: #fff; font-weight: 700; font-size: 15.5px; }
+.lever-top output { font: 700 20px/1 var(--sans); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lever input[type=range] { width: 100%; margin: 12px 0 8px; accent-color: #ff9466; cursor: pointer; }
+.lever-foot { display: flex; justify-content: space-between; gap: 10px; align-items: center; font-size: 13px; color: #9fb6d6; }
+.chip { font: 700 12.5px/1 var(--sans); color: #dbe5f3; background: rgba(255, 255, 255, .08); border: 1px solid #4b6a94; border-radius: 99px; padding: 7px 11px; cursor: pointer; }
+.chip:hover { background: rgba(255, 255, 255, .18); }
+.lever-out { background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .14); border-radius: 14px; padding: 24px; }
+.lever-out .lo-label { font: 700 12px/1.3 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: #9fb6d6; }
+.lever-out .lo-big { font: 700 clamp(44px, 6vw, 68px)/1 var(--sans); color: #fff; letter-spacing: -.02em; margin: 8px 0 6px; font-variant-numeric: tabular-nums; }
+.lever-out .lo-from { font-size: 14.5px; color: #b9c9df; }
+.lo-bar { height: 12px; border-radius: 6px; background: rgba(255, 255, 255, .12); margin: 16px 0; overflow: hidden; }
+.lo-bar i { display: block; height: 100%; border-radius: 6px; background: #ff9466; transition: width .25s ease; }
+.lever-out .lo-say { font: 400 17px/1.5 var(--serif); color: #fff; margin: 0 0 14px; min-height: 4.5em; }
+
+/* Fold-away detail */
+details.acc { border: 1px solid var(--rule); border-radius: 12px; background: var(--card); margin: 14px 0; padding: 0 20px; }
+details.acc summary { cursor: pointer; font: 700 16.5px/1.3 var(--sans); color: var(--ink); padding: 16px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+details.acc summary::-webkit-details-marker { display: none; }
+details.acc summary::after { content: "+"; font: 400 24px/0.8 var(--sans); color: var(--blue); transition: transform .2s ease; }
+details.acc[open] summary::after { transform: rotate(45deg); }
+details.acc > *:not(summary) { font-size: 16px; }
+details.acc > *:last-child { margin-bottom: 18px; }
+.recs { margin-top: 34px; }
+.rec { transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1), box-shadow .2s ease; }
+.rec:target { box-shadow: 0 0 0 3px var(--blue); }
+.tile { transition: background-color .3s ease, transform .15s ease; }
+.tile:hover { transform: scale(1.08); }
+
+@media (max-width: 900px) {
+  .hero, .levers, .stat-row, .stat-row.two { grid-template-columns: 1fr; }
+  .pairs-head { display: none; }
+  .pair-row { grid-template-columns: 1fr; gap: 4px; margin-top: 16px; }
+  .pair-row i { transform: rotate(90deg); }
+  .pair-row:hover i { transform: rotate(90deg); }
+  .eq { grid-template-columns: 1fr; gap: 6px; }
+  .eq > i { text-align: center; }
+  .eq-tile { padding: 16px; }
+}
+@media (max-width: 640px) {
+  .dgrid i { width: 10px; height: 10px; }
+  .dgrid { gap: 3px; }
+  .dots { gap: 18px 22px; }
+}
+@media print {
+  #progress, .hero-actions, .play-actions, #guess { display: none !important; }
+  .js .anim { opacity: 1 !important; transform: none !important; }
+  .js .anim:not(.in) .grow { transform: none; }
+  .js .anim:not(.in) .draw { stroke-dashoffset: 0; }
+  .js .anim:not(.in) .pop { opacity: 1; }
+  .js .anim:not(.in) .meter .fill { width: auto !important; }
+  details.acc, .stat, .eq-tile { break-inside: avoid; }
+  .play { background: #fff; color: var(--ink-2); box-shadow: none; border: 1px solid var(--rule); }
+  .play h2, .play h3, .lever-top, .lever-out .lo-big, .lever-out .lo-say { color: var(--navy); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .anim, .grow, .draw, .pop, .meter .fill, .waffle i.back, #draw .actual { transition: none !important; }
+}
+
+/* ---------- Third pass: a cover that fills the screen, the role switch, the slides ---------- */
+.cover { position: relative; overflow: hidden; display: flex; align-items: center; min-height: min(94vh, 900px);
+  background: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 100% 46px, linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 46px 100%, var(--navy); }
+.cover::before { content: ""; position: absolute; width: 900px; height: 900px; right: -220px; top: -320px; border-radius: 50%; background: radial-gradient(closest-side, rgba(58, 126, 220, .55), transparent); animation: drift 16s ease-in-out infinite alternate; pointer-events: none; }
+.cover::after { content: ""; position: absolute; width: 700px; height: 700px; left: -260px; bottom: -380px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 148, 102, .22), transparent); animation: drift 20s ease-in-out infinite alternate-reverse; pointer-events: none; }
+@keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(-90px, 70px) scale(1.15); } }
+.cover > .wide { position: relative; z-index: 1; width: 100%; }
+.cover h1 { font-size: clamp(46px, 7.4vw, 92px); }
+.hero-read { display: flex; flex-wrap: wrap; gap: 4px 20px; min-height: 1.7em; margin-bottom: 8px; font-size: 13.5px; color: #b9c9df; }
+.hero-read b { color: #fff; font-size: 15.5px; font-variant-numeric: tabular-nums; }
+#hero-chart { cursor: ew-resize; }
+.kpi { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.kpi:hover { transform: translateY(-3px); border-color: var(--blue); box-shadow: 0 10px 24px -16px rgba(15, 42, 77, .6); }
+
+.lens { margin: 22px 0 6px; padding: 18px 20px 20px; border-radius: 14px; background: linear-gradient(135deg, #f1f6fd, #fdf3ee); border: 1px solid #dbe6f5; }
+.lens-label { font: 700 15.5px/1.3 var(--sans); color: var(--navy); margin: 0 0 10px; }
+.lens .seg { background: rgba(255, 255, 255, .7); margin-bottom: 14px; }
+.lens .seg button[aria-pressed="true"] { background: var(--navy); color: #fff; }
+.lens-card { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 22px; align-items: center; animation: lensin .45s ease; }
+.lens-card[hidden] { display: none; }
+@keyframes lensin { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.lens-num b { display: block; font: 700 clamp(44px, 6vw, 72px)/1 var(--sans); color: var(--navy); letter-spacing: -.025em; }
+.lens-num span { display: block; margin-top: 8px; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.lens-do { background: #fff; border-radius: 12px; padding: 16px 18px; border: 1px solid var(--rule); }
+.lens-do .label { color: #1c5cab; margin-bottom: 6px; }
+.lens-do p { margin: 0 0 8px; color: var(--ink); font-size: 16px; line-height: 1.5; }
+.lens-do a { font-weight: 700; font-size: 14px; text-decoration: none; }
+.pair-row.hot > div.do { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange); }
+.pair-row.hot i { color: var(--orange); }
+
+#deck { position: fixed; inset: 0; z-index: 100; color: #fff; cursor: pointer; overflow: hidden; outline: none;
+  background: radial-gradient(1100px 700px at 80% 0%, #1f4f93 0%, transparent 60%), radial-gradient(800px 600px at 0% 100%, rgba(255, 148, 102, .25) 0%, transparent 60%), #0b2140; }
+#deck[hidden] { display: none; }
+.slide { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: 6vh 9vw 14vh; opacity: 0; transform: translateX(60px); transition: opacity .5s ease, transform .6s cubic-bezier(.2, .7, .2, 1); pointer-events: none; }
+.slide.on { opacity: 1; transform: none; pointer-events: auto; }
+.s-kicker { font: 700 clamp(12px, 1.3vw, 16px)/1.3 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #9fb6d6; margin: 0 0 2vh; }
+.s-title { font: 600 clamp(44px, 9vw, 130px)/1 var(--serif); color: #fff; letter-spacing: -.02em; margin: 0 0 3vh; }
+.s-title.small { font-size: clamp(30px, 5vw, 68px); }
+.s-big b { display: block; font: 700 clamp(84px, 19vw, 280px)/.95 var(--sans); letter-spacing: -.04em; color: #fff; }
+.s-big.two { display: flex; flex-wrap: wrap; gap: 0 7vw; }
+.s-big.two b { font-size: clamp(64px, 13vw, 200px); }
+.s-big.two span:first-child b { color: #5fd0c5; }
+.s-big.two span:last-child b { color: #ff9466; }
+.s-big i { display: block; font: 700 clamp(14px, 1.6vw, 22px)/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: #9fb6d6; font-style: normal; margin-top: 1vh; }
+.s-text { font: 400 clamp(18px, 2.3vw, 34px)/1.4 var(--serif); color: #dbe5f3; max-width: 26em; margin: 3vh 0 0; }
+.s-list { margin: 0; padding: 0; list-style: none; counter-reset: s; max-width: 60em; }
+.s-list li { counter-increment: s; position: relative; padding: 1.6vh 0 1.6vh 2.6em; font: 400 clamp(16px, 2vw, 28px)/1.4 var(--serif); color: #dbe5f3; border-top: 1px solid rgba(255, 255, 255, .16); }
+.s-list li::before { content: counter(s); position: absolute; left: 0; top: 1.4vh; width: 1.7em; height: 1.7em; border-radius: 50%; background: #ff9466; color: #0b2140; font: 700 .8em/1.7em var(--sans); text-align: center; }
+.s-list b { color: #fff; }
+.deck-ui { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 14px; padding: 18px 4vw; cursor: default; }
+.deck-ui button { font: 700 15px/1 var(--sans); color: #fff; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .28); border-radius: 9px; padding: 11px 14px; cursor: pointer; }
+.deck-ui button:hover { background: rgba(255, 255, 255, .22); }
+.deck-dots { display: flex; gap: 7px; flex: 1; justify-content: center; }
+.deck-dots button { width: 11px; height: 11px; padding: 0; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .28); }
+.deck-dots button.on { background: #ff9466; transform: scale(1.25); }
+.deck-count { font-size: 14px; color: #9fb6d6; font-variant-numeric: tabular-nums; }
+@media (max-width: 900px) { .lens-card { grid-template-columns: 1fr; gap: 12px; } .cover { min-height: 0; } }
+@media print { #deck { display: none !important; } .cover { min-height: 0; display: block; } .cover::before, .cover::after { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cover::before, .cover::after, .lens-card { animation: none; } .slide { transition: none; } }
 </style>
 </head>
 <body>
+<div id="progress" aria-hidden="true"></div>
 
 <header class="bar pad">
   <div class="bar-in">
     <a class="home" href="../../">← Timur Kherlenbayar</a>
     <nav aria-label="Sections of the report">
       <a href="#summary">Summary</a>
+      <a href="#guess">Your guess</a>
       <a href="#growth">1 Growth</a>
       <a href="#customers">2 Customers</a>
       <a href="#reviews">3 Bad orders</a>
@@ -293,55 +512,112 @@ footer.end p { margin: 0; max-width: 620px; }
       <a href="#scorecard">Scorecards</a>
       <a href="#notes">Notes</a>
     </nav>
+    <button class="btn" type="button" data-present>▶ Present</button>
     <button class="btn" type="button" id="print">Print or save as PDF</button>
   </div>
 </header>
 
 <main>
   <div class="cover pad">
-    <div class="wide">
-      <p class="label">Business review · Olist marketplace · January 2017 to August 2018</p>
-      <h1>More sellers, same sales</h1>
-      <p class="dek">Olist’s sales more than tripled during 2017, and they have not grown since last November. This review explains why signing up more sellers stopped lifting sales, shows where orders still go wrong, and sets out what I would do in the twelve weeks before Black Friday.</p>
-      <ul class="byline">
-        <li>Prepared by <b>Timur Kherlenbayar</b></li>
-        <li>Data through <b>31 August 2018</b></li>
-        <li>The summary takes <b>two minutes</b> to read</li>
-      </ul>
-      <p class="about"><b>About this report.</b> Olist is a Brazilian company that lets small merchants sell on the country’s large shopping sites through one shared storefront, and it arranges the delivery for them. In 2018 it published the records of about 100,000 of its orders so that anyone could study them. I have written this review the way I would write it for the company’s leadership team at the start of September 2018, which is where the data ends. I have never worked for Olist, so everything here comes from that public file, and the <a href="#notes">notes at the end</a> say what the file cannot tell us. Amounts are in Brazilian reais, and one real was worth about 27 US cents in 2018.</p>
+    <div class="wide hero">
+      <div>
+        <p class="label">A business review · Olist marketplace, Brazil · 2017 to 2018</p>
+        <h1>More sellers, same sales</h1>
+        <p class="dek">A marketplace kept signing up sellers and stopped growing anyway. This is the review I would hand its leadership team: what happened, why, and what to do before Black Friday.</p>
+        <div class="hero-actions">
+          <a class="cta" href="#summary">The 60-second version ↓</a>
+          <a class="cta ghost" href="#guess">Test your instinct first</a>
+          <button class="cta ghost" type="button" data-present>▶ Present it as slides</button>
+        </div>
+        <details class="about">
+          <summary>What is this, and whose data is it?</summary>
+          <p>Olist is a Brazilian company that lets small merchants sell on the country’s large shopping sites through one shared storefront, and it arranges the delivery. In 2018 it published the records of about 100,000 of its orders. I wrote this the way I would for its leadership team at the start of September 2018, which is where the data ends. I have never worked for Olist, so everything here comes from that public file, and the <a href="#notes">notes at the end</a> say what it cannot tell us. Amounts are in Brazilian reais, and one real was worth about 27 US cents in 2018.</p>
+        </details>
+      </div>
+      <figure class="hero-fig anim">
+        <div class="hero-read" id="hero-read" aria-hidden="true"></div>
+        <div class="chart" id="hero-chart" role="img" aria-label="Two lines from January 2017 to August 2018. The number of active sellers rises the whole way to 1,266. Monthly sales rise with it until November 2017 and then flatten and dip."></div>
+        <figcaption>Move across the chart to travel through the twenty months. Both lines are set to the same height in November 2017, the month sales peaked.</figcaption>
+      </figure>
     </div>
   </div>
 
   <!-- Executive summary -->
   <section class="summary pad" id="summary" aria-labelledby="sum-title">
-    <div class="wide sheet">
-      <p class="label">The two-minute version</p>
-      <h2 id="sum-title">Executive summary</h2>
-      <p class="lead">The marketplace is running better than it ever has, and it is selling less than it did in the spring. Over the last three months a typical order arrived in {{latest_days}} days and only {{latest_late}} of orders came late, which are the best figures on record. Monthly sales, at {{latest_sales}}, are nevertheless {{sales_vs_prior}} below the three months before, and no month has matched last November. The number of sellers keeps rising, so each seller now sells about a quarter less than at the start of the year. Signing up more sellers is no longer what grows this business.</p>
+    <div class="wide sheet anim">
+      <p class="label">The 60-second version</p>
+      <h2 id="sum-title">Running better than ever, and selling less than in spring.</h2>
+      <p class="lead">Orders now arrive in {{latest_days}} days and only {{latest_late}} come late, the best figures on record. Yet monthly sales are {{sales_vs_prior}} lower than in the spring, and signing up more sellers has stopped helping, because each seller now sells about a quarter less.</p>
 
-      <div class="kpis" id="kpis"></div>
-      <p class="kpi-note">Each figure is the average for June to August 2018. The small lines show all twenty months, with the latest three in blue. “Bad reviews” are ratings of one or two stars out of five.</p>
 
-      <div class="two">
-        <div>
-          <h3>What I found</h3>
-          <ol class="points">
-            <li><b>Growth stopped nine months ago.</b>Sales rose from {{jan17_sales}} a month in January 2017 to {{peak_sales}} in November, and no month since has matched it. <a href="#growth">Section 1 →</a></li>
-            <li><b>The shortfall is in demand, and more sellers will not fill it.</b>There are {{sellers_change}} more active sellers than in the first quarter and {{sales_change_abs}} less in sales. The sellers who were active all year are selling {{continuing_pct}} less. <a href="#growth">Section 1 →</a></li>
-            <li><b>Good service rests on a few fragile weeks.</b>Four of the twenty months produced {{bad_share_late}} of all late deliveries, and in those months {{rio_bad_rate}} of the parcels sent to Rio de Janeiro arrived late. A late order is rated {{late_score}} stars on average, against {{ordinary_score}} for an ordinary one. <a href="#delivery">Section 4 →</a></li>
-            <li><b>The seller base is top-heavy and it leaks.</b>Just {{top1_n}} sellers bring in {{top1_share}} of sales, and {{gone_share}} of new sellers have stopped selling by their fourth month. <a href="#sellers">Section 5 →</a></li>
-          </ol>
+      <div class="lens" id="lens">
+        <p class="lens-label">Short on time? Pick your seat at the table.</p>
+        <div class="seg" role="group" aria-label="Choose whose summary to read">
+          <button type="button" data-role="ceo" aria-pressed="true">Chief executive</button>
+          <button type="button" data-role="ops" aria-pressed="false">Operations</button>
+          <button type="button" data-role="sellers" aria-pressed="false">Seller growth</button>
+          <button type="button" data-role="cx" aria-pressed="false">Customer experience</button>
         </div>
-        <div>
-          <h3>What I recommend</h3>
-          <ol class="points do">
-            <li><b>Prepare for Black Friday now.</b>Promise longer delivery times to Rio and the Northeast during the peak weeks, book extra carrier capacity, and stop asking late customers for a rating before their parcel has arrived. <a href="#rec-1">Details →</a></li>
-            <li><b>Count the sellers who sell.</b>Replace the target for sellers signed with a target for new sellers who reach four orders in their first month. {{active4_still}} of those sellers are still selling months later, against {{rest_still}} of the others. <a href="#rec-2">Details →</a></li>
-            <li><b>Find out where the buyers went.</b>The order file shows that demand per seller fell and cannot show why. Visits, conversion and prices by shopping site would, and that work should come before next year’s plan. <a href="#rec-3">Details →</a></li>
-            <li><b>Repair orders that hold more than one item.</b>They are {{multi_share_orders}} of orders and {{multi_share_low}} of bad reviews, and half of the complaints say that only part of the order came. <a href="#rec-4">Details →</a></li>
-          </ol>
+        <div class="lens-card" data-for="ceo" data-hot="#rec-2 #rec-3">
+          <div class="lens-num"><b>−{{sales_vs_prior}}</b><span>monthly sales against the spring, with {{sellers_change}} more sellers than at the start of the year</span></div>
+          <div class="lens-do"><p class="label">Your decision</p><p>Stop measuring growth by the number of sellers signed, and ask for the study of where the buyers went before you approve next year’s plan.</p><a href="#growth">See the evidence →</a></div>
+        </div>
+        <div class="lens-card" data-for="ops" data-hot="#rec-1" hidden>
+          <div class="lens-num"><b>{{rio_bad_rate}}</b><span>of parcels to Rio de Janeiro arrived late during the four bad months</span></div>
+          <div class="lens-do"><p class="label">Your decision</p><p>Agree a longer delivery promise for the peak weeks and extra carrier space this month. Black Friday is twelve weeks away.</p><a href="#delivery">See the evidence →</a></div>
+        </div>
+        <div class="lens-card" data-for="sellers" data-hot="#rec-2" hidden>
+          <div class="lens-num"><b>{{gone_share}}</b><span>of new sellers have stopped selling by their fourth month</span></div>
+          <div class="lens-do"><p class="label">Your decision</p><p>Aim your team at new sellers who reach four orders in thirty days, and give the top {{top5_n}} sellers a named person to call.</p><a href="#sellers">See the evidence →</a></div>
+        </div>
+        <div class="lens-card" data-for="cx" data-hot="#rec-4" hidden>
+          <div class="lens-num"><b>{{multi_partial}}</b><span>of complaints on multi-item orders say that only part of the order came</span></div>
+          <div class="lens-do"><p class="label">Your decision</p><p>Ask for the rating only after the last parcel has arrived, and hold it back whenever an order is running late.</p><a href="#reviews">See the evidence →</a></div>
         </div>
       </div>
+
+      <div class="kpis" id="kpis"></div>
+      <p class="kpi-note">Averages for June to August 2018. The arrows compare with the three months before and with a year earlier. A “bad review” is one or two stars out of five.</p>
+
+      <div class="pairs">
+        <div class="pairs-head"><span>What I found</span><span></span><span>What I would do</span></div>
+        <a class="pair-row" href="#rec-1">
+          <div><b>Good service breaks in a few bad weeks.</b><p>Four months out of twenty produced {{bad_share_late}} of all late deliveries. In those months {{rio_bad_rate}} of parcels to Rio de Janeiro came late.</p></div>
+          <i aria-hidden="true">→</i>
+          <div class="do"><b>Prepare for Black Friday now.</b><p>Promise longer delivery to Rio and the Northeast in the peak weeks, and book extra carrier space.</p></div>
+        </a>
+        <a class="pair-row" href="#rec-2">
+          <div><b>More sellers no longer means more sales.</b><p>There are {{sellers_change}} more sellers than in the first quarter, and {{sales_change_abs}} less in sales.</p></div>
+          <i aria-hidden="true">→</i>
+          <div class="do"><b>Count the sellers who sell.</b><p>Reward the team for new sellers who reach four orders in their first month, and not for sign-ups.</p></div>
+        </a>
+        <a class="pair-row" href="#rec-3">
+          <div><b>The sellers Olist already has are selling less.</b><p>The same {{continuing_n}} sellers sold {{continuing_pct}} less in summer than in spring.</p></div>
+          <i aria-hidden="true">→</i>
+          <div class="do"><b>Find out where the buyers went.</b><p>The order records cannot say why. Visits and prices on each shopping site can.</p></div>
+        </a>
+        <a class="pair-row" href="#rec-4">
+          <div><b>One order in seven ends in a bad review.</b><p>Orders with several items are {{multi_share_orders}} of orders and {{multi_share_low}} of the bad reviews.</p></div>
+          <i aria-hidden="true">→</i>
+          <div class="do"><b>Fix orders with more than one item.</b><p>Half of those complaints say that only part of the order came.</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guess -->
+  <section class="part pad" id="guess" aria-labelledby="guess-title">
+    <div class="wide play anim">
+      <p class="label">Before the evidence, a quick test</p>
+      <h2 id="guess-title">Olist kept adding sellers all through 2018. Draw what you think sales did.</h2>
+      <p>Sales more than tripled during 2017, and about {{new_per_month}} new sellers made their first sale in every month of 2018. Drag across the shaded area to finish the line.</p>
+      <div class="chart" id="draw" aria-label="A chart of monthly sales in 2017 with an empty area for 2018 where you can draw your guess."></div>
+      <div class="play-actions">
+        <button class="cta" type="button" id="draw-show" disabled>Show me what happened</button>
+        <button class="cta ghost" type="button" id="draw-skip">Skip, just show me</button>
+        <button class="cta ghost" type="button" id="draw-again" hidden>Draw again</button>
+      </div>
+      <p class="play-out" id="draw-out" role="status" aria-live="polite"></p>
     </div>
   </section>
 
@@ -349,42 +625,33 @@ footer.end p { margin: 0; max-width: 620px; }
   <section class="part pad" id="growth" aria-labelledby="growth-title">
     <div class="col part-head">
       <p class="label"><span>1</span>Growth</p>
-      <h2 id="growth-title">Sales more than tripled in 2017 and have not grown since November.</h2>
+      <h2 id="growth-title">Sales peaked in November 2017 and never got back there.</h2>
     </div>
     <div class="col">
-      <p>In the first three months of 2017 Olist sold about {{q1_17_sales}} of goods a month. By the last three months of that year it was selling {{q4_17_sales}} a month, which is {{growth_2017}} times as much, and November reached {{peak_sales}} with the help of Black Friday. That is still the record. Sales held near {{jan_may_sales}} a month from January to May of this year and then slipped to {{latest_sales}} a month across June, July and August. August was still {{aug_yoy}} ahead of August 2017, but all of that growth had been won before this year began.</p>
+      <p>Sales went from {{q1_17_sales}} a month in early 2017 to {{peak_sales}} in November, with the help of Black Friday. This year they held near {{jan_may_sales}} a month until May and then slipped to {{latest_sales}} over the summer.</p>
+      <h3>Sales are the number of sellers multiplied by what each one sells. One went up and the other went down.</h3>
     </div>
-    <figure class="fig wide">
-      <figcaption><b>No month has matched November 2017</b><span>Sales of goods each month, in reais, not counting delivery charges</span></figcaption>
-      <div class="chart" id="c-sales" role="img" aria-label="Column chart of monthly sales from January 2017 to August 2018. Sales rise through 2017 to a peak of about one million reais in November and stay below that level in every month of 2018."></div>
-      <details class="nums"><summary>Show the numbers behind the charts in this section</summary><div class="scroll" id="t-monthly"></div></details>
+    <div class="wide eq anim" aria-label="Sellers up {{sellers_change}}, times sales per seller down {{per_seller_change}}, equals sales down {{sales_change_abs}}.">
+      <div class="eq-tile up"><b class="count">+{{sellers_change}}</b><span>active sellers</span></div>
+      <i aria-hidden="true">×</i>
+      <div class="eq-tile down"><b class="count">−{{per_seller_change}}</b><span>sales per seller</span></div>
+      <i aria-hidden="true">=</i>
+      <div class="eq-tile down total"><b class="count">−{{sales_change_abs}}</b><span>monthly sales</span></div>
+    </div>
+    <div class="col">
+      <p class="eq-note">January to March 2018 compared with June to August 2018.</p>
+      <p>New sellers starting small is not the explanation. The {{continuing_n}} sellers who sold in both spring and summer sold {{continuing_pct}} less. Newcomers more than replaced the sellers who left, but they could not cover that drop as well.</p>
+    </div>
+    <figure class="fig col anim">
+      <figcaption><b>New sellers replaced the ones who left. The loss came from the sellers who stayed.</b><span>Change in average monthly sales between January to May and June to August 2018</span></figcaption>
+      <div class="chart" id="c-bridge" role="img" aria-label="Bar chart of the change in monthly sales. Sellers who stopped: minus 89 thousand reais. Sellers active in both periods: minus 128 thousand. New sellers: plus 130 thousand. Net change: minus 87 thousand."></div>
+      <details class="nums"><summary>Show every month’s numbers</summary><div class="scroll" id="t-monthly"></div></details>
     </figure>
-
     <div class="col">
-      <h3>The number of sellers kept growing, and sales per seller did not.</h3>
-      <p>A marketplace can grow in two ways. It can have more sellers, or each seller can sell more, so it helps to split sales into those two parts. Olist had {{sellers_jan}} active sellers in January and {{sellers_aug}} in August, and about {{new_per_month}} new sellers made their first sale in each month of this year. Over the same months the amount an average seller sold fell from {{per_seller_jan}} to {{per_seller_aug}}.</p>
-    </div>
-    <figure class="fig wide">
-      <figcaption><b>Sellers are up by {{sellers_change}} since the first quarter, and each one sells {{per_seller_change}} less</b><span>An active seller is one who made at least one sale in the month</span></figcaption>
-      <div class="pair">
-        <div class="mini"><b>Active sellers</b><div class="chart" id="c-sellers" role="img" aria-label="Line chart of active sellers by month, rising steadily from 226 in January 2017 to 1,266 in August 2018."></div></div>
-        <div class="mini"><b>Sales per active seller, in reais a month</b><div class="chart" id="c-per" role="img" aria-label="Line chart of monthly sales per active seller. It rises to about 1,050 reais in November 2017, holds near 950 in early 2018 and falls to about 670 by August 2018."></div></div>
-      </div>
-    </figure>
-
-    <div class="col">
-      <p>It would be easy to explain this away by saying that new sellers start small and pull the average down. That is not what happened. I followed the {{continuing_n}} sellers who sold both in January to May and in June to August. Together they sold {{continuing_before}} a month in the first period and {{continuing_after}} a month in the second, which is a drop of {{continuing_pct}}. New sellers added {{new_delta}} a month. That more than covered the {{stopped_delta}} lost with the sellers who stopped, but it could not also cover the decline among the sellers who stayed.</p>
-    </div>
-    <figure class="fig col">
-      <figcaption><b>New sellers replaced the ones who left. The loss came from the sellers who stayed.</b><span>Change in average monthly sales between January to May and June to August 2018, in reais</span></figcaption>
-      <div class="chart" id="c-bridge" role="img" aria-label="Bar chart of the change in monthly sales. Sellers who stopped: minus 89 thousand. Sellers active in both periods: minus 128 thousand. New sellers: plus 130 thousand. Net change: minus 87 thousand."></div>
-    </figure>
-
-    <div class="col">
-      <div class="so-what">
+      <div class="so-what anim">
         <p class="label">What this means</p>
-        <p>When established sellers with the same catalogues sell {{continuing_pct}} less, the likeliest reason is that fewer shoppers are reaching them or buying from them. Recruiting more sellers then divides the same demand among more shops. The decline was also uneven. Computer accessories fell by {{cat_computers_change}} and sports and leisure by {{cat_sports_change}}, while health and beauty grew by {{cat_health_change}}, and the <a href="#scorecard">scorecard at the end</a> shows every large category.</p>
-        <p>I cannot tell from the order file why demand softened, because it holds no record of visits, of competitors’ prices or of advertising. Some of it may be the season, since there is only one earlier year to compare with, and June and July followed a national truckers’ strike and included a World Cup. That uncertainty is the reason for my third recommendation.</p>
+        <p>When the same sellers with the same products sell {{continuing_pct}} less, fewer shoppers are finding them or buying from them. Adding sellers then only splits the same demand more ways.</p>
+        <p>The order records begin at the moment of purchase, so they cannot say why demand fell. Part of it may be the season, with a truckers’ strike in May and a World Cup in June and July. Finding out is my third recommendation.</p>
       </div>
     </div>
   </section>
@@ -393,28 +660,27 @@ footer.end p { margin: 0; max-width: 620px; }
   <section class="part pad" id="customers" aria-labelledby="cust-title">
     <div class="col part-head">
       <p class="label"><span>2</span>Customers</p>
-      <h2 id="cust-title">Almost every order comes from someone buying for the first time.</h2>
+      <h2 id="cust-title">Nearly every order comes from a first-time buyer.</h2>
     </div>
     <div class="col">
-      <p>Of the {{customers}} customers who bought during these twenty months, {{once_share}} bought exactly once. This year only {{returning_share}} of orders came from someone who had bought before. How well the first order went makes some difference to whether a customer returns, but not much.</p>
+      <p>{{once_share}} of customers bought exactly once, and even a perfect first order barely changes that.</p>
     </div>
-    <figure class="fig col">
-      <figcaption><b>Of every hundred customers, about {{repeat_per_100}} come back</b><span>Customers whose first order was delivered before March 2018, and whether they have ordered again since</span></figcaption>
+    <figure class="fig col anim">
+      <figcaption><b>Of every hundred customers, about {{repeat_per_100}} come back</b><span>Customers whose first order was delivered before March 2018</span></figcaption>
       <div class="cust">
         <div class="waffle" id="waffle" role="img" aria-label="A grid of one hundred squares with {{repeat_per_100}} of them coloured, standing for the customers who ordered again."></div>
         <dl class="facts">
-          <div><dt>{{repeat_after_five}}</dt><dd>came back after rating their first order five stars</dd></div>
-          <div><dt>{{repeat_after_low}}</dt><dd>came back after rating it one or two stars</dd></div>
-          <div><dt>{{repeat_after_on_time}}</dt><dd>came back after a first order that arrived on time</dd></div>
-          <div><dt>{{repeat_after_late}}</dt><dd>came back after a first order that arrived late</dd></div>
+          <div><dt>{{repeat_after_five}}</dt><dd>came back after a five-star first order</dd></div>
+          <div><dt>{{repeat_after_low}}</dt><dd>came back after a one- or two-star first order</dd></div>
+          <div><dt>{{repeat_after_on_time}}</dt><dd>came back after an on-time first order</dd></div>
+          <div><dt>{{repeat_after_late}}</dt><dd>came back after a late first order</dd></div>
         </dl>
       </div>
-      <p class="fig-note">Based on {{first_orders}} first orders. If the public file leaves out some orders, these rates are lower than the true ones, and the comparison between the groups still holds. The notes explain this.</p>
     </figure>
     <div class="col">
-      <div class="so-what">
+      <div class="so-what anim">
         <p class="label">What this means</p>
-        <p>Two decisions follow from this. The first is that a loyalty programme is unlikely to pay for itself soon, because even delighted customers rarely return. Shoppers buy on the large shopping sites and many of them probably never learn that Olist was involved. The second is that the business has to win nearly every order afresh, which makes the reputation of the shared storefront worth more than any one customer’s goodwill. The next two sections look at what damages that reputation.</p>
+        <p>A loyalty programme would buy very little here. Shoppers buy on the big shopping sites and may never learn that Olist was involved. So the business has to win almost every order from scratch, and the reputation of its shared storefront is what it most needs to protect.</p>
       </div>
     </div>
   </section>
@@ -423,24 +689,33 @@ footer.end p { margin: 0; max-width: 620px; }
   <section class="part pad" id="reviews" aria-labelledby="rev-title">
     <div class="col part-head">
       <p class="label"><span>3</span>Bad orders</p>
-      <h2 id="rev-title">One order in seven ends in a bad review, and four kinds of order produce most of them.</h2>
+      <h2 id="rev-title">One order in seven ends in a bad review, and most of them trace to a few kinds of order.</h2>
     </div>
     <div class="col">
-      <p>After every order the customer is asked to rate it from one to five stars. Across the period {{low_rate}} of rated orders received one or two stars, and I will call that a bad review. An ordinary order, meaning a single item that arrived on time, gets a bad review {{baseline}} of the time. Four kinds of order do far worse. They make up only {{problem_share_orders}} of orders and they account for {{problem_share_low}} of the bad reviews.</p>
+      <p>An ordinary order, meaning one item that arrives on time, gets a bad review {{baseline}} of the time. Orders that go wrong get them far more often.</p>
     </div>
-    <figure class="fig wide">
-      <figcaption><b>Where the bad reviews come from</b><span>All {{reviewed}} rated orders, January 2017 to August 2018, sorted into five kinds</span></figcaption>
-      <div class="kinds" id="kinds"></div>
-      <p class="fig-note">Each order is counted once, in the first row that describes it. If the four kinds at the top had been rated like ordinary orders, there would have been about {{excess}} fewer bad reviews, which is {{excess_share}} of the total.</p>
+    <figure class="fig wide anim" id="dots-fig">
+      <figcaption><b>Picture 200 orders</b><span>Each dot stands for one order in every 200. Point at a group for its exact figures.</span></figcaption>
+      <div class="seg" id="dots-seg" role="group" aria-label="What the dots show">
+        <button type="button" aria-pressed="true">How the 200 orders went</button>
+        <button type="button" aria-pressed="false">Who left a bad review?</button>
+      </div>
+      <div class="dots" id="dots"></div>
+      <p class="dots-say" id="dots-say" role="status" aria-live="polite"></p>
+      <details class="nums"><summary>Show the exact figures</summary>
+        <div class="kinds" id="kinds"></div>
+        <p class="fig-note">All {{reviewed}} rated orders, each counted once in the first row that describes it. If the four kinds at the top had been rated like ordinary orders, there would have been about {{excess}} fewer bad reviews, which is {{excess_share}} of the total.</p>
+      </details>
     </figure>
-
-    <div class="col">
-      <h3>Orders that never arrive are already becoming rarer.</h3>
-      <p>Customers paid {{undelivered_paid}}, which is {{undelivered_paid_share}} of all payments, for {{undelivered_orders}} orders that never reached them. Some were cancelled, some turned out to be out of stock after the customer had paid, and some were shipped and never recorded as delivered. This is the one problem in the report that has largely been dealt with. These orders were {{undelivered_2017}} of the total in 2017 and {{undelivered_latest}} in the last three months, mostly because out-of-stock sales fell from {{unavailable_2017}} of orders to {{unavailable_latest}}. I would keep the figure on the monthly dashboard and would not start a new project for it.</p>
-
-      <h3>Orders with more than one item are judged as a whole, and often only part has come.</h3>
-      <p>About {{multi_share_orders}} of orders contain more than one item. Even when the order was recorded as delivered on time, {{several_items_low}} of those from a single seller received a bad review, and so did {{split_sellers_low}} of those that drew on several sellers. The written comments say why. I searched the comments on these bad reviews for Portuguese phrases such as “só recebi um” and “faltou”, which mean “I only received one” and “something was missing”. They appear in {{multi_partial}} of the comments on orders with several items, and in {{single_partial}} of the comments on single-item orders.</p>
-      <p>So the system marks the order as delivered when the first parcel lands, the customer is asked for one rating for the whole order, and the answer is given while half of it is still missing. Fixing that is my fourth recommendation.</p>
+    <div class="wide stat-row two anim">
+      <div class="stat">
+        <b>{{undelivered_2017}} → {{undelivered_latest}}</b>
+        <p><strong>Orders that never arrive are getting rarer.</strong> Customers paid {{undelivered_paid}} for {{undelivered_orders}} orders that never reached them, but the share has halved since 2017. It needs watching and not a new project.</p>
+      </div>
+      <div class="stat">
+        <b class="count">{{multi_partial}}</b>
+        <p><strong>of complaints on multi-item orders say only part of it came.</strong> On single-item orders it is {{single_partial}}. The order is marked as delivered when the first parcel lands, and the customer rates all of it while half is still missing.</p>
+      </div>
     </div>
   </section>
 
@@ -448,62 +723,67 @@ footer.end p { margin: 0; max-width: 620px; }
   <section class="part pad" id="delivery" aria-labelledby="del-title">
     <div class="col part-head">
       <p class="label"><span>4</span>Delivery</p>
-      <h2 id="del-title">Delivery is faster than ever. The danger is a handful of bad weeks, and Black Friday is twelve weeks away.</h2>
+      <h2 id="del-title">Delivery is faster than ever. A few bad weeks do the damage, and Black Friday is twelve weeks away.</h2>
     </div>
     <div class="col">
-      <p>A typical order now arrives in {{latest_days}} days, compared with {{q1_days}} days in the first quarter of this year, and {{latest_late}} of orders arrive after the date the customer was promised. Lateness in this business is not a steady drip. It comes in episodes. November and December 2017 and February and March 2018 held {{bad_share_orders}} of the orders and {{bad_share_late}} of the late deliveries. In the other sixteen months {{normal_rate}} of orders were late, and in those four months {{bad_rate}} were.</p>
-      <p>Rio de Janeiro took the worst of it. The state receives {{rio_share_orders}} of orders and {{rio_share_late}} of late deliveries, and during the four bad months {{rio_bad_rate}} of the parcels sent there arrived late.</p>
+      <p>A typical order now takes {{latest_days}} days, down from {{q1_days}} at the start of the year. Lateness comes in bursts. Four months held {{bad_share_orders}} of the orders and {{bad_share_late}} of the late deliveries, and Rio de Janeiro took the worst of it.</p>
     </div>
-    <figure class="fig wide">
-      <figcaption><b>Late deliveries arrive in episodes, and Rio de Janeiro is hit hardest</b><span>Share of delivered orders that arrived after the promised date, by the month the order was placed</span></figcaption>
+    <figure class="fig wide anim">
+      <figcaption><b>Late deliveries arrive in bursts, and Rio de Janeiro is hit hardest</b><span>Share of orders that arrived after the promised date, by the month they were placed</span></figcaption>
       <div class="legend"><span><i class="line" style="background:var(--orange)"></i>Orders sent to Rio de Janeiro state</span><span><i class="line" style="background:var(--blue)"></i>Orders sent everywhere else</span></div>
       <div class="chart" id="c-late" role="img" aria-label="Line chart of the share of orders delivered late each month, for Rio de Janeiro and for the rest of Brazil. Both lines are low in most months and spike in November and December 2017 and in February and March 2018, when about a third of the parcels sent to Rio arrived late."></div>
-      <p class="fig-note">November is the month of Black Friday. The delays of February and March coincided with a <a href="https://agenciabrasil.ebc.com.br/geral/noticia/2018-03/saiba-o-que-fazer-para-ficar-com-contas-em-dia-durante-greve-dos-correios" target="_blank" rel="noopener noreferrer">national postal strike that began on 12 March</a> and, in Rio, with a wave of cargo theft that led the post office to <a href="https://setcesp.org.br/noticias/por-violencia-correios-vao-cobrar-taxa-extra-para-fazer-entregas-no-rio/" target="_blank" rel="noopener noreferrer">add an emergency charge on parcels to the city</a>. The file does not name the carrier of each parcel, so I offer these as context and not as a proven cause.</p>
+      <p class="fig-note">November is Black Friday. February and March coincided with a <a href="https://agenciabrasil.ebc.com.br/geral/noticia/2018-03/saiba-o-que-fazer-para-ficar-com-contas-em-dia-durante-greve-dos-correios" target="_blank" rel="noopener noreferrer">national postal strike</a> and, in Rio, a wave of cargo theft that led the post office to <a href="https://setcesp.org.br/noticias/por-violencia-correios-vao-cobrar-taxa-extra-para-fazer-entregas-no-rio/" target="_blank" rel="noopener noreferrer">add an emergency charge</a>. The records do not name the carrier, so this is context and not proof.</p>
     </figure>
 
     <div class="col">
-      <h3>Customers forgive a slow delivery and punish a broken promise.</h3>
-      <p>Olist gives every customer a delivery date at checkout. On average it promises {{avg_promised}} days and delivers in {{avg_days}}, and that cushion matters, because the rating follows the promise much more closely than it follows the speed. Single-item orders that took three to four weeks and still arrived by the promised date averaged {{slow_on_time_score}} stars. Orders that arrived four to seven days after the promised date averaged {{late_4_7_score}}.</p>
+      <h3>Customers forgive slow. They do not forgive late.</h3>
+      <p>Olist promises a delivery date at checkout, on average {{avg_promised}} days out, and usually beats it. The rating follows that promise far more than it follows speed. An order that takes three to four weeks and still arrives when promised averages {{slow_on_time_score}} stars.</p>
     </div>
-    <figure class="fig col">
+    <figure class="fig col anim">
       <figcaption><b>The rating falls off a cliff at the promised date</b><span>Average stars out of five, by how many days before or after the promised date the order arrived</span></figcaption>
       <div class="legend"><span><i style="background:var(--blue)"></i>Arrived by the promised date</span><span><i style="background:var(--orange)"></i>Arrived after it</span></div>
       <div class="chart" id="c-gap" role="img" aria-label="Column chart of the average rating by arrival time. Orders that arrive early or on the promised date average between 4.1 and 4.3 stars. Orders one to three days late average 3.3, four to seven days late 2.1, and more than a week late 1.7."></div>
     </figure>
 
-    <div class="col">
-      <h3>Three late customers in four are asked for a rating while they are still waiting.</h3>
-      <p>Olist’s description of its data says that the rating request goes out when the order is delivered or when the promised date passes, whichever comes first. The file bears that out. For {{asked_before}} of the late orders, the request was sent before the parcel arrived. Among orders that were one to three days late, customers who were asked after the parcel came gave {{d13_after_score}} stars on average, and customers who were asked while still waiting gave {{d13_before_score}}.</p>
-      <p>Holding the request until the parcel arrives, and sending an apology with a new date in its place, is the cheapest change in this report. It would not make a single parcel faster, and part of the gain would be a fairer measurement and not a happier customer. It would still stop the business from collecting its worst reviews at the worst possible moment.</p>
-
-      <h3>Most late parcels were handed over on time by the seller.</h3>
-      <p>In {{carrier_share}} of late orders the seller met its shipping deadline, so the time was lost with the carrier. A late parcel spent a typical {{transit_late}} days in the carrier’s hands, against {{transit_on_time}} days for one that arrived on time. Sellers who shipped late account for the other {{seller_share}}, and they are concentrated. Just {{half_missed_sellers}} sellers, {{half_missed_share}} of those who shipped anything, are responsible for half of all the missed shipping deadlines.</p>
+    <div class="wide stat-row anim">
+      <div class="stat">
+        <b class="count">{{asked_before}}</b>
+        <p><strong>of late customers were asked for a rating before the parcel arrived.</strong> Among orders one to three days late, people asked while still waiting gave {{d13_before_score}} stars, and people asked afterwards gave {{d13_after_score}}.</p>
+      </div>
+      <div class="stat">
+        <b class="count">{{carrier_share}}</b>
+        <p><strong>of late parcels left the seller on time.</strong> The days were lost with the carrier, where a late parcel spent a typical {{transit_late}} days against {{transit_on_time}} for one that arrived on time.</p>
+      </div>
+      <div class="stat">
+        <b class="count">{{half_missed_sellers}}</b>
+        <p><strong>sellers cause half of all missed shipping deadlines.</strong> That is {{half_missed_share}} of the sellers who ship anything, so a short list of calls would cover most of the problem.</p>
+      </div>
     </div>
 
-    <figure class="fig wide">
-      <figcaption><b>How delivery differs across Brazil</b><span>Each square is a state, placed roughly where it sits on the map. Choose what to compare.</span></figcaption>
+    <figure class="fig wide anim">
+      <figcaption><b>How delivery differs across Brazil</b><span>Each square is a state, placed roughly where it sits on the map. Choose what to compare, and point at a state for its details.</span></figcaption>
       <div class="seg" id="map-seg" role="group" aria-label="Measure shown on the map"></div>
       <div class="map-wrap">
         <div>
           <div class="tiles" id="tiles"></div>
           <div class="ramp"><span id="ramp-lo"></span><i></i><span id="ramp-hi"></span></div>
-          <p class="fig-note">The states in the far north receive very few orders, so their figures rest on small numbers. The colour scale is set by the states with at least 200 orders.</p>
+          <p class="fig-note">The far northern states receive very few orders, so their figures rest on small numbers.</p>
         </div>
         <div class="map-side">
           <ul>
-            <li><b>São Paulo is the home market.</b> It receives {{sp_share_orders}} of orders, and {{sp_seller_share}} of all orders are shipped by sellers based there. A typical delivery inside the state takes {{sp_days}} days.</li>
-            <li><b>The Northeast waits longest and pays most.</b> Its nine states receive {{ne_share_orders}} of orders and {{ne_share_late}} of late deliveries. A typical order takes {{ne_days}} days, and delivery adds {{ne_freight}} to the price of the goods, against {{sp_freight}} in São Paulo.</li>
-            <li><b>One route matters more than any other.</b> Parcels from São Paulo sellers to Rio de Janeiro customers are {{sprj_share}} of orders and {{sprj_rate}} of them arrived late, which makes it the largest single source of late deliveries outside São Paulo itself.</li>
+            <li><b>São Paulo is the home market.</b> It receives {{sp_share_orders}} of orders, and {{sp_seller_share}} of all orders ship from sellers based there.</li>
+            <li><b>The Northeast waits longest and pays most.</b> A typical order takes {{ne_days}} days against {{sp_days}} in São Paulo, and delivery adds {{ne_freight}} to the price against {{sp_freight}}.</li>
+            <li><b>One route matters most.</b> São Paulo sellers to Rio customers is {{sprj_share}} of orders, and {{sprj_rate}} of them arrived late.</li>
           </ul>
         </div>
       </div>
     </figure>
 
     <div class="col">
-      <div class="aside">
-        <p class="label">Something I tested and dropped</p>
-        <p>I checked whether Olist could do better with a simple rule for the promised date, which was to promise each state the time within which 95% of its deliveries had arrived over the previous four weeks. Run across the whole period, the rule made {{test_late}} of orders late against the {{actual_late}} that really were, and it did so by promising {{test_extra_days}} more days on average. The existing promise is already about as good as recent history allows, because the bad weeks give no warning in the data. That is why my recommendation is to plan for the peaks we know are coming and to tell customers when a parcel is late, and not to adopt a new formula.</p>
-      </div>
+      <details class="acc">
+        <summary>Something I tested and dropped</summary>
+        <p>I checked whether a simple rule could set a better promised date, by promising each state the time within which 95% of its deliveries had arrived over the previous four weeks. Across the whole period the rule made {{test_late}} of orders late against the {{actual_late}} that really were, and it only managed that by promising {{test_extra_days}} more days. The promise Olist already makes is about as good as recent history allows, because the bad weeks give no warning. That is why I recommend planning for the peaks we know are coming, and not a new formula.</p>
+      </details>
     </div>
   </section>
 
@@ -511,32 +791,27 @@ footer.end p { margin: 0; max-width: 620px; }
   <section class="part pad" id="sellers" aria-labelledby="sel-title">
     <div class="col part-head">
       <p class="label"><span>5</span>Sellers</p>
-      <h2 id="sel-title">A few dozen sellers carry the business, and a third of new sellers stop within months.</h2>
+      <h2 id="sel-title">A few dozen sellers carry the business, and one new seller in three fades within months.</h2>
     </div>
     <div class="col">
-      <p>Olist is paid by its sellers, so they are its real customers, and the seller base has two weaknesses. The first is how much rests on a few of them. Over the twenty months {{sellers_total}} sellers made at least one sale. The top one percent, which is {{top1_n}} sellers, brought in {{top1_share}} of all sales, and the top five percent brought in {{top5_share}}. The smaller half of the base, {{bottom50_n}} sellers, brought in {{bottom50_share}}.</p>
+      <p>Olist is paid by its sellers, so they are its real customers. Of {{sellers_total}} sellers, the top {{top1_n}} bring in {{top1_share}} of sales, and the smaller half bring in {{bottom50_share}}.</p>
     </div>
-    <figure class="fig col">
-      <figcaption><b>{{top5_n}} sellers bring in more than half of all sales</b><span>Sellers ranked by their total sales over the twenty months and split into five groups</span></figcaption>
+    <figure class="fig col anim">
+      <figcaption><b>{{top5_n}} sellers bring in more than half of all sales</b><span>Sellers ranked by their total sales and split into five groups</span></figcaption>
       <div class="legend"><span><i style="background:var(--grey-mark)"></i>Share of sellers</span><span><i style="background:var(--blue)"></i>Share of sales</span></div>
       <div class="tiers" id="tiers"></div>
     </figure>
-
     <div class="col">
-      <p>The second weakness is that many sellers do not last. Of the {{cohort_n}} sellers who made their first sale before March 2018, {{gone_share}} made no sale at all in their fourth, fifth and sixth months. The sellers who joined during 2017 show what that costs. Together they sold {{est_before}} a month between January and May and {{est_after}} a month between June and August, which is {{est_change}} less, and the number of them still selling fell from {{est_active_before}} to {{est_active_after}}.</p>
-
-      <h3>The first month shows who will stay.</h3>
-      <p>How a seller’s first thirty days go is a strong sign of what follows. Sellers who received a single order in that time, who are {{slow_start_share}} of all new sellers, had a {{trac0_still}} chance of still selling in months four to six. Sellers who received ten or more had a {{trac3_still}} chance, and they went on to sell about {{trac_ratio}} times as much each month.</p>
+      <p>Many sellers do not last. {{gone_share}} of new sellers made no sale at all in their fourth to sixth months. A seller’s first month is the best early sign of who will stay.</p>
     </div>
-    <figure class="fig col">
-      <figcaption><b>Sellers with a busy first month are far more likely to stay</b><span>Share of new sellers who made at least one sale in months four to six, by the number of orders in their first thirty days</span></figcaption>
+    <figure class="fig col anim">
+      <figcaption><b>Sellers with a busy first month are far more likely to stay</b><span>Share of new sellers still selling in months four to six, by the number of orders in their first thirty days</span></figcaption>
       <div class="chart" id="c-trac" role="img" aria-label="Column chart. Of sellers with one order in their first thirty days, 47 percent were still selling in months four to six. With two or three orders, 68 percent. With four to nine, 85 percent. With ten or more, 94 percent."></div>
-      <p class="fig-note">Based on the {{cohort_n}} sellers whose first sale came before March 2018, so that each has six full months of history.</p>
     </figure>
     <div class="col">
-      <div class="so-what">
+      <div class="so-what anim">
         <p class="label">What this means</p>
-        <p>This is a pattern and not proof. Sellers with better products get more orders early and also last longer, so helping a weak seller to four orders may not turn it into a strong one. It is still the earliest signal the business has, it arrives within a month, and it gives the team that looks after sellers something concrete to aim at. I would test it on one intake of new sellers before changing anyone’s targets, and my second recommendation describes how.</p>
+        <p>This is a pattern and not proof, because good products win early orders and also last longer. It is still the earliest signal there is, and it gives the team that looks after sellers a clear target. I would test it on one month’s new sellers before changing anyone’s goals.</p>
       </div>
     </div>
   </section>
@@ -547,74 +822,76 @@ footer.end p { margin: 0; max-width: 620px; }
       <p class="label"><span>6</span>Recommendations</p>
       <h2 id="act-title">Four things to do, in the order I would do them.</h2>
     </div>
-    <div class="col">
-      <p>For each one I have set out the first step, what the evidence suggests it is worth, how we would know it had worked, and how sure I am. One limit applies to all four. The order file lets me count late parcels and bad reviews with confidence, and it does not let me turn a bad review into lost reais, so I have given the size of each problem in orders and reviews and have used money only where the file records it.</p>
+    <div class="wide play anim">
+      <p class="label">Try it yourself</p>
+      <h3>What would fixing these be worth?</h3>
+      <p>Drag the sliders and watch the share of bad reviews move. One honest limit: the records let me count bad reviews, and they do not let me turn one into lost money, so the result is measured in unhappy customers.</p>
+      <div class="levers" id="levers"></div>
     </div>
+
     <div class="wide recs">
-      <article class="rec" id="rec-1">
+      <article class="rec anim" id="rec-1">
         <div class="rec-main">
           <p class="label">1 · Before 23 November</p>
           <h3>Prepare for Black Friday now.</h3>
-          <p>Last year’s peak and the disruption that followed produced more than half of all the late deliveries in this report. The dates of this year’s peak are known, and so is the place where it will hurt most. For orders placed in the weeks around Black Friday and Christmas, promise longer delivery times to Rio de Janeiro and the Northeast, and reserve extra carrier capacity on the route from São Paulo to Rio. Change the rating request so that it waits for the parcel, and send an apology with a new date when the promised day passes.</p>
+          <p>Last year’s peak and the disruption after it produced more than half of all late deliveries. This year’s dates are known. For orders placed around Black Friday and Christmas, promise longer delivery to Rio de Janeiro and the Northeast, book extra carrier space from São Paulo to Rio, and hold the rating request until the parcel has arrived.</p>
         </div>
         <dl class="rec-side">
-          <div><dt>First step</dt><dd>Agree the peak calendar and the longer promise with the carriers this month, and change the timing of the rating request.</dd></div>
-          <div><dt>What it is worth</dt><dd>If the four bad months had run at the ordinary late rate, about {{peak_avoided_late}} orders would have arrived on time and about {{peak_avoided_bad}} bad reviews would not have been written.</dd></div>
-          <div><dt>How we will know</dt><dd>The share of orders that arrive late, by week and by destination, stays under 5% for Rio through November and December.</dd></div>
-          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>High on the diagnosis, and less on how much of the delay Olist can control.</dd></div>
+          <div><dt>First step</dt><dd>Agree the peak calendar and the longer promise with the carriers this month.</dd></div>
+          <div><dt>What it is worth</dt><dd>About {{peak_avoided_late}} on-time orders and {{peak_avoided_bad}} fewer bad reviews, if the four bad months had run like ordinary ones.</dd></div>
+          <div><dt>How we will know</dt><dd>Late deliveries to Rio stay under 5% through November and December.</dd></div>
+          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>High on the cause, less on how much of it Olist controls.</dd></div>
         </dl>
       </article>
 
-      <article class="rec" id="rec-2">
+      <article class="rec anim" id="rec-2">
         <div class="rec-main">
           <p class="label">2 · This quarter</p>
           <h3>Count the sellers who sell.</h3>
-          <p>Adding sellers has stopped adding sales, and a third of new sellers fade within months. I would replace the target for the number of sellers signed with a target for the share of new sellers who reach four orders in their first thirty days, which {{activation_share}} of them do today. Give each new seller help with listings and prices during that month. Separately, give the {{top5_n}} sellers who bring in {{top5_share}} of sales a named person to call, because losing a few of them would cost more than a bad month.</p>
+          <p>Replace the target for sellers signed with one for new sellers who reach four orders in their first thirty days. Today {{activation_share}} do, and {{active4_still}} of them are still selling months later, against {{rest_still}} of the rest. Separately, give the {{top5_n}} sellers who bring in {{top5_share}} of sales a named person to call.</p>
         </div>
         <dl class="rec-side">
-          <div><dt>First step</dt><dd>Take next month’s new sellers, give half of them the extra help, and compare the two halves after ninety days.</dd></div>
-          <div><dt>What it is worth</dt><dd>Sellers who joined in 2017 now sell {{est_lost}} a month less than they did in the spring. Winning back a tenth of that is worth about {{est_tenth}} a month.</dd></div>
-          <div><dt>How we will know</dt><dd>The share of new sellers reaching four orders in thirty days rises, and sales per active seller stop falling.</dd></div>
-          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>Medium. The pattern is strong, and the test is what would show that help causes sellers to stay.</dd></div>
+          <div><dt>First step</dt><dd>Give half of next month’s new sellers extra help with listings and prices, and compare the two halves after ninety days.</dd></div>
+          <div><dt>What it is worth</dt><dd>Sellers who joined in 2017 now sell {{est_lost}} a month less than in spring. A tenth of that is {{est_tenth}} a month.</dd></div>
+          <div><dt>How we will know</dt><dd>More new sellers reach four orders, and sales per seller stop falling.</dd></div>
+          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>Medium. The test is what would show that help makes sellers stay.</dd></div>
         </dl>
       </article>
 
-      <article class="rec" id="rec-3">
+      <article class="rec anim" id="rec-3">
         <div class="rec-main">
           <p class="label">3 · Before next year’s plan</p>
           <h3>Find out where the buyers went.</h3>
-          <p>The most important number in this report is that sellers who were active all year are selling {{continuing_pct}} less than they were in the spring. I can show that it happened and I cannot show why, because the order file starts at the moment of purchase. The answer is in data the company holds and did not publish, which is the number of visits to listings, the share of visits that end in an order, and Olist’s prices against competing listings, each by shopping site and by category. I would start with computer accessories and sports and leisure, where the falls were largest.</p>
+          <p>The most important number here is that the same sellers sold {{continuing_pct}} less in summer than in spring. I can show that it happened and not why. The answer is in data the company holds and did not publish: visits to listings, the share of visits that end in an order, and prices against competing listings, for each shopping site and category.</p>
         </div>
         <dl class="rec-side">
-          <div><dt>First step</dt><dd>Pull visits and orders by shopping site and category for January to August, and see whether the fall is in visits or in conversion.</dd></div>
-          <div><dt>What it is worth</dt><dd>The gap between spring and summer is {{gap_pm}} a month, or about {{gap_year}} over a year if it persists.</dd></div>
-          <div><dt>How we will know</dt><dd>Leadership can say which of three things happened: fewer visits, lower conversion, or a seasonal dip that 2019 will repeat.</dd></div>
+          <div><dt>First step</dt><dd>Start with computer accessories and sports and leisure, where sales fell most.</dd></div>
+          <div><dt>What it is worth</dt><dd>The gap is {{gap_pm}} a month, or about {{gap_year}} over a year if it lasts.</dd></div>
+          <div><dt>How we will know</dt><dd>Leadership can say whether it was fewer visits, fewer visits turning into orders, or a seasonal dip.</dd></div>
           <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>High that this is the right question. The answer is unknown.</dd></div>
         </dl>
       </article>
 
-      <article class="rec" id="rec-4">
+      <article class="rec anim" id="rec-4">
         <div class="rec-main">
           <p class="label">4 · Next quarter</p>
-          <h3>Repair orders that hold more than one item.</h3>
-          <p>One order in eleven holds more than one item, and those orders are rated badly three times as often as ordinary ones even when the records say they arrived on time. Half of the complaints say that only part of the order came. I would track each parcel of an order separately, show the customer a date for each one, mark the order as delivered only when the last parcel arrives, and send the rating request after that.</p>
+          <h3>Fix orders with more than one item.</h3>
+          <p>One order in eleven holds more than one item, and those orders are rated badly three times as often as ordinary ones. Track each parcel separately, show the customer a date for each, and ask for the rating only after the last one arrives.</p>
         </div>
         <dl class="rec-side">
-          <div><dt>First step</dt><dd>Check whether parcel-level tracking already exists with the carriers, and read a hundred of these complaints with the support team.</dd></div>
-          <div><dt>What it is worth</dt><dd>{{multi_orders}} orders over twenty months, and about {{multi_excess}} bad reviews beyond what ordinary orders would have received.</dd></div>
-          <div><dt>How we will know</dt><dd>The share of bad reviews on multi-item orders falls from {{multi_low_rate}} towards the {{baseline}} of ordinary orders.</dd></div>
-          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>Medium. The comments are clear about the cause, and the file cannot confirm when each parcel arrived.</dd></div>
+          <div><dt>First step</dt><dd>Check whether the carriers already track each parcel, and read a hundred of these complaints with the support team.</dd></div>
+          <div><dt>What it is worth</dt><dd>About {{multi_excess}} bad reviews more than ordinary orders would have received, across {{multi_orders}} orders.</dd></div>
+          <div><dt>How we will know</dt><dd>Bad reviews on these orders fall from {{multi_low_rate}} towards {{baseline}}.</dd></div>
+          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>Medium. The comments are clear, and the records cannot confirm when each parcel arrived.</dd></div>
         </dl>
       </article>
     </div>
 
-    <div class="col">
-      <h3>Three things I considered and would not do.</h3>
-      <ul class="nots">
-        <li><b>A loyalty programme for shoppers.</b><p>About {{repeat_per_100}} customers in a hundred come back, and a perfect first order moves that figure by less than a point. Money spent here would buy very little.</p></li>
-        <li><b>A new formula for the promised delivery date.</b><p>The simple version I tested did no better than the promise Olist already makes, as section 4 explains.</p></li>
-        <li><b>A project on out-of-stock orders.</b><p>They have already fallen from {{unavailable_2017}} of orders to {{unavailable_latest}}, so it is enough to keep watching the number.</p></li>
-      </ul>
+    <div class="col"><h3>Three things I considered and would not do.</h3></div>
+    <div class="wide stat-row nots anim">
+      <div class="stat"><p><strong>A loyalty programme.</strong> About {{repeat_per_100}} customers in a hundred come back, and a perfect first order moves that by less than a point.</p></div>
+      <div class="stat"><p><strong>A new formula for the promised date.</strong> The simple version I tested did no better than the promise Olist already makes.</p></div>
+      <div class="stat"><p><strong>A project on out-of-stock orders.</strong> They have already fallen from {{unavailable_2017}} of orders to {{unavailable_latest}}.</p></div>
     </div>
   </section>
 
@@ -625,9 +902,9 @@ footer.end p { margin: 0; max-width: 620px; }
       <h2 id="score-title">Look up your own area.</h2>
     </div>
     <div class="col">
-      <p>The findings above describe the whole business, and a regional or category manager will want their own numbers. The table below gives the same measures for each of Brazil’s 27 states and for the twenty largest product categories. Select any column heading to sort by it.</p>
+      <p>The same measures for each of Brazil’s 27 states and for the twenty largest product categories. Select any column heading to sort by it.</p>
     </div>
-    <div class="fig wide">
+    <div class="fig wide anim">
       <div class="card-tools">
         <div class="seg" id="score-seg" role="group" aria-label="Rows shown in the table">
           <button type="button" data-view="states" aria-pressed="true">By state</button>
@@ -644,34 +921,88 @@ footer.end p { margin: 0; max-width: 620px; }
   <section class="part pad notes" id="notes" aria-labelledby="notes-title">
     <div class="col part-head">
       <p class="label">Notes</p>
-      <h2 id="notes-title">What the words mean, what the data cannot tell us, and how this was built.</h2>
+      <h2 id="notes-title">The fine print.</h2>
     </div>
     <div class="col">
-      <h3>What the measures mean</h3>
-      <dl>
-        <dt>Sales</dt><dd>The price of the goods in an order, without the delivery charge, for every order that was not cancelled or found to be out of stock. Olist’s own income is a commission and a fee taken from these sales, and the file does not record it.</dd>
-        <dt>Active seller</dt><dd>A seller who made at least one sale in the month.</dd>
-        <dt>Typical delivery time</dt><dd>The middle value, so that half of orders arrived sooner and half later, counted from the moment of purchase to the moment of delivery.</dd>
-        <dt>Late</dt><dd>Delivered on a later calendar day than the date the customer was shown at checkout.</dd>
-        <dt>Bad review</dt><dd>A rating of one or two stars out of five. Where an order was rated twice, I kept the more recent rating.</dd>
-      </dl>
-
-      <h3>What the data cannot tell us</h3>
-      <ul>
-        <li><b>The file may not hold every order.</b> Olist published about 100,000 orders and did not say how they were chosen. I have treated the file as if it were the whole business. If orders were left out, the totals here are too low and repeat purchases are undercounted. Rates that are measured inside each order, such as the share that arrived late and the ratings that late orders received, would not be affected.</li>
-        <li><b>The first and last months are incomplete.</b> The file holds a few hundred orders from 2016 and stops partway through September 2018, so the review covers January 2017 to August 2018.</li>
-        <li><b>There is no record of what happened before a purchase.</b> Visits, searches, prices on competing listings and advertising are all missing, which is why the review can show that demand per seller fell and cannot explain it.</li>
-        <li><b>There is one delivery date for each order.</b> For an order that came in several parcels, the file cannot show when each one arrived.</li>
-        <li><b>These are patterns and not experiments.</b> Late orders get worse ratings, and busy new sellers stay longer, but the file cannot prove that changing one would change the other. Where it matters I have proposed a test.</li>
-        <li><b>The data is old.</b> It ends in 2018. I chose it because it is a rare public record of a real company’s orders, sellers, deliveries and ratings together, and this review does not describe Olist as it is today.</li>
-      </ul>
-
-      <h3>How this was built</h3>
-      <p>The public file is nine linked tables of orders, items, payments, ratings, customers, sellers and products. I loaded them into DuckDB and wrote SQL to build one table with a row for each order, and a Python script then computes every figure in this report from that table. The page is filled in from the script’s results when it is built, so no number here was typed by hand. {{code_sentence}}</p>
-      <p>The data is the <a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank" rel="noopener noreferrer">Brazilian E-Commerce Public Dataset by Olist</a>, which the company shares under a Creative Commons licence for non-commercial use (CC BY-NC-SA 4.0).</p>
+      <details class="acc">
+        <summary>What the measures mean</summary>
+        <dl>
+          <dt>Sales</dt><dd>The price of the goods in an order, without the delivery charge, for every order that was not cancelled or found to be out of stock. Olist’s own income is a commission and a fee taken from these sales, and the records do not show it.</dd>
+          <dt>Active seller</dt><dd>A seller who made at least one sale in the month.</dd>
+          <dt>Typical delivery time</dt><dd>The middle value, so that half of orders arrived sooner and half later, counted from purchase to delivery.</dd>
+          <dt>Late</dt><dd>Delivered on a later day than the date the customer was shown at checkout.</dd>
+          <dt>Bad review</dt><dd>A rating of one or two stars out of five. Where an order was rated twice, I kept the more recent rating.</dd>
+        </dl>
+      </details>
+      <details class="acc">
+        <summary>What the data cannot tell us</summary>
+        <ul>
+          <li><b>The file may not hold every order.</b> Olist published about 100,000 orders and did not say how they were chosen. I have treated the file as the whole business. If orders were left out, the totals here are too low and repeat purchases are undercounted. Rates measured inside each order, such as the share that arrived late, would not be affected.</li>
+          <li><b>The first and last months are incomplete,</b> so the review covers January 2017 to August 2018.</li>
+          <li><b>Nothing is recorded before a purchase.</b> Visits, searches, competitors’ prices and advertising are all missing, which is why the review can show that demand fell and cannot explain it.</li>
+          <li><b>There is one delivery date for each order,</b> so for an order that came in several parcels the records cannot show when each one arrived.</li>
+          <li><b>These are patterns and not experiments.</b> Late orders get worse ratings and busy new sellers stay longer, but the records cannot prove that changing one would change the other. Where it matters I have proposed a test.</li>
+          <li><b>The data is old.</b> It ends in 2018. I chose it because it is a rare public record of a real company’s orders, sellers, deliveries and ratings together, and this review does not describe Olist as it is today.</li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>How this was built</summary>
+        <p>The public file is nine linked tables of orders, items, payments, ratings, customers, sellers and products. I loaded them into a database, wrote SQL to build one table with a row for each order, and a Python script computes every figure in this report from that table. The page is filled in from the script’s results when it is built, so no number here was typed by hand. {{code_sentence}}</p>
+        <p>The data is the <a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank" rel="noopener noreferrer">Brazilian E-Commerce Public Dataset by Olist</a>, which the company shares under a Creative Commons licence for non-commercial use (CC BY-NC-SA 4.0).</p>
+      </details>
     </div>
   </section>
 </main>
+
+
+<div id="deck" hidden tabindex="-1" role="dialog" aria-modal="true" aria-label="The review as slides">
+  <section class="slide">
+    <p class="s-kicker">Business review · Olist marketplace · data to August 2018</p>
+    <h2 class="s-title">More sellers,<br>same sales</h2>
+    <p class="s-text">Six slides and one ask. Press the right arrow, or click anywhere.</p>
+  </section>
+  <section class="slide">
+    <p class="s-kicker">The headline</p>
+    <div class="s-big two"><span><b class="count">+{{sellers_change}}</b><i>sellers</i></span><span><b class="count">−{{sales_change_abs}}</b><i>sales</i></span></div>
+    <p class="s-text">Since the first quarter Olist has added sellers and sold less. Sales peaked last November and have not been back.</p>
+  </section>
+  <section class="slide">
+    <p class="s-kicker">Why</p>
+    <div class="s-big"><b class="count">−{{continuing_pct}}</b></div>
+    <p class="s-text">The same {{continuing_n}} sellers sold {{continuing_pct}} less in summer than in spring. The gap is in demand, and more sellers will not fill it.</p>
+  </section>
+  <section class="slide">
+    <p class="s-kicker">Service</p>
+    <div class="s-big"><b class="count">{{bad_share_late}}</b></div>
+    <p class="s-text">of all late deliveries came in four months out of twenty. In those months {{rio_bad_rate}} of parcels to Rio de Janeiro arrived late.</p>
+  </section>
+  <section class="slide">
+    <p class="s-kicker">Customers</p>
+    <div class="s-big"><b>1 in 7</b></div>
+    <p class="s-text">orders ends in a bad review. A late order averages {{late_score}} stars, against {{ordinary_score}} for an ordinary one.</p>
+  </section>
+  <section class="slide">
+    <p class="s-kicker">Sellers</p>
+    <div class="s-big"><b class="count">{{top1_n}}</b></div>
+    <p class="s-text">sellers bring in {{top1_share}} of all sales, and {{gone_share}} of new sellers have stopped selling by their fourth month.</p>
+  </section>
+  <section class="slide">
+    <p class="s-kicker">The ask</p>
+    <h2 class="s-title small">Three decisions for this meeting</h2>
+    <ol class="s-list">
+      <li><b>Approve the Black Friday plan.</b> A longer delivery promise for Rio and the Northeast, and extra carrier space.</li>
+      <li><b>Change the seller target.</b> From sellers signed to new sellers who reach four orders in a month.</li>
+      <li><b>Commission the demand study.</b> Find out where the buyers went before next year’s plan is set.</li>
+    </ol>
+  </section>
+  <div class="deck-ui">
+    <button type="button" class="deck-prev" aria-label="Previous slide">←</button>
+    <div class="deck-dots"></div>
+    <span class="deck-count"></span>
+    <button type="button" class="deck-next" aria-label="Next slide">→</button>
+    <button type="button" class="deck-close">Close ✕</button>
+  </div>
+</div>
 
 <footer class="end pad">
   <div class="wide">
@@ -788,7 +1119,7 @@ const DATA = /*DATA*/null;
   /* A column with a rounded top and a square foot. */
   function column(s, x, y, w, hh, fill) {
     const r = Math.min(4, w / 2, hh);
-    return el('path', { d: `M${x},${y + hh}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + hh}Z`, fill }, s);
+    return el('path', { d: `M${x},${y + hh}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + hh}Z`, fill, class: 'grow' }, s);
   }
 
   const M = DATA.monthly;
@@ -937,7 +1268,7 @@ const DATA = /*DATA*/null;
     });
     yAxis(s, [0, 0.1, 0.2, 0.3, 0.4], y, m.l, w - m.r, (t) => f.pct(t));
     const line = (key, colour) => {
-      el('polyline', { points: M.map((d, i) => `${x(i)},${y(d[key])}`).join(' '), fill: 'none', stroke: colour, 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, s);
+      el('polyline', { points: M.map((d, i) => `${x(i)},${y(d[key])}`).join(' '), fill: 'none', stroke: colour, 'stroke-width': 2, pathLength: 1, class: 'draw', 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, s);
     };
     line('late_rest', C.blue); line('late_rio', C.orange);
     const pk = months.indexOf('2018-03');
@@ -1176,6 +1507,348 @@ const DATA = /*DATA*/null;
     }));
     render();
   })();
+
+  /* ---------- Second pass: the opening chart, the drawing game, the dots, the sliders ---------- */
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let heroSet = null;
+  const DARK = { grid: 'rgba(255,255,255,.12)', text: '#9fb6d6', sellers: '#5fd0c5', sales: '#ff9466', guess: '#ffd66b' };
+
+  /* Opening chart: sellers and sales, both set to 100 in the month sales peaked */
+  chart('hero-chart', (node, w) => {
+    const H = Math.max(250, Math.min(400, Math.round(w * 0.72))), m = { l: 4, r: 124, t: 16, b: 30 };
+    const s = svg(node, w, H), iw = w - m.l - m.r, ih = H - m.t - m.b, n = M.length;
+    const pk = M.reduce((a, d, i) => (d.sales > M[a].sales ? i : a), 0);
+    const x = (i) => m.l + iw * i / (n - 1), y = (v) => m.t + ih * (1 - v / 140);
+    el('line', { x1: x(pk), x2: x(pk), y1: m.t, y2: m.t + ih, stroke: '#4b6a94', 'stroke-width': 1, 'stroke-dasharray': '3 4' }, s);
+    el('line', { x1: m.l, x2: m.l + iw, y1: m.t + ih, y2: m.t + ih, stroke: '#4b6a94', 'stroke-width': 1 }, s);
+    el('text', { x: x(0), y: H - 8, 'font-size': 12, fill: DARK.text }, s, 'Jan 2017');
+    el('text', { x: x(pk), y: H - 8, 'text-anchor': 'middle', 'font-size': 12, fill: DARK.text }, s, 'Nov 2017');
+    el('text', { x: x(n - 1), y: H - 8, 'text-anchor': 'end', 'font-size': 12, fill: DARK.text }, s, 'Aug 2018');
+    const last = M[n - 1];
+    [['sales', DARK.sales, 'Sales', f.k(last.sales) + ' a month'], ['sellers', DARK.sellers, 'Sellers', f.int(last.sellers) + ' active']].forEach(([key, colour, name, value]) => {
+      const v = M.map((d) => d[key] / M[pk][key] * 100);
+      el('polyline', { points: v.map((p, i) => `${x(i)},${y(p)}`).join(' '), fill: 'none', stroke: colour, 'stroke-width': 3.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', pathLength: 1, class: 'draw' }, s);
+      const ey = y(v[n - 1]);
+      el('circle', { cx: x(n - 1), cy: ey, r: 5.5, fill: colour, class: 'pop' }, s);
+      el('text', { x: x(n - 1) + 13, y: ey - 1, 'font-size': 16, 'font-weight': 700, fill: '#fff', class: 'pop' }, s, name);
+      el('text', { x: x(n - 1) + 13, y: ey + 16, 'font-size': 12.5, fill: '#c8d5e8', class: 'pop' }, s, value);
+    });
+
+    const read = document.getElementById('hero-read');
+    const cur = el('line', { y1: m.t, y2: m.t + ih, stroke: '#fff', 'stroke-width': 1, opacity: 0 }, s);
+    heroSet = (i, showLine) => {
+      cur.setAttribute('x1', x(i)); cur.setAttribute('x2', x(i)); cur.setAttribute('opacity', showLine ? 0.7 : 0);
+      const d = M[i];
+      read.textContent = '';
+      [[monthName(d.month), ''], [f.int(d.sellers), 'sellers'], [f.k(d.sales), 'in sales'], [f.pct(d.late_rate, 1), 'delivered late']].forEach(([v, k]) => {
+        const c = h('span', '', read);
+        h('b', '', c, v);
+        if (k) c.appendChild(document.createTextNode(' ' + k));
+      });
+    };
+    const hit = el('rect', { x: 0, y: 0, width: m.l + iw + 10, height: H, fill: 'transparent' }, s);
+    hit.addEventListener('pointermove', (e) => { const b = s.getBoundingClientRect(); heroSet(Math.max(0, Math.min(n - 1, Math.round((e.clientX - b.left - m.l) / iw * (n - 1)))), true); });
+    hit.addEventListener('pointerleave', () => heroSet(n - 1, false));
+    heroSet(n - 1, false);
+  });
+
+  /* The drawing game */
+  (function () {
+    const node = document.getElementById('draw');
+    if (!node) return;
+    const show = document.getElementById('draw-show'), skip = document.getElementById('draw-skip'), again = document.getElementById('draw-again'), out = document.getElementById('draw-out');
+    const n = M.length, first = months.indexOf('2018-01'), MAX = 1600000;
+    let guess = new Array(n).fill(null), shown = false, animate = false, lastI = null, geo = null, width = 0;
+
+    function build() {
+      const w = Math.floor(node.clientWidth);
+      if (!w) return;
+      width = w;
+      node.textContent = '';
+      const narrow = w < 560, H = narrow ? 300 : 390, m = { l: 52, r: 18, t: 16, b: 38 };
+      const s = svg(node, w, H), iw = w - m.l - m.r, ih = H - m.t - m.b;
+      const x = (i) => m.l + iw * i / (n - 1), y = (v) => m.t + ih * (1 - v / MAX);
+      const zx = (x(first - 1) + x(first)) / 2;
+      el('rect', { x: zx, y: m.t, width: x(n - 1) - zx + 12, height: ih, rx: 8, fill: 'rgba(255,255,255,.06)' }, s);
+      [0, 500000, 1000000, 1500000].forEach((t) => {
+        el('line', { x1: m.l, x2: w - m.r + 12, y1: y(t), y2: y(t), stroke: DARK.grid, 'stroke-width': 1 }, s);
+        el('text', { x: m.l - 8, y: y(t) + 4, 'text-anchor': 'end', 'font-size': 12, fill: DARK.text }, s, t === 0 ? '0' : t >= 1e6 ? 'R$' + t / 1e6 + 'M' : 'R$500K');
+      });
+      [['2017-01', 'Jan 2017', 'start'], ['2017-07', 'Jul', 'middle'], ['2018-01', 'Jan 2018', 'middle'], ['2018-08', 'Aug', 'end']].forEach(([mo, label, anchor]) => {
+        el('text', { x: x(months.indexOf(mo)), y: H - 12, 'text-anchor': anchor, 'font-size': 12, fill: DARK.text }, s, label);
+      });
+      el('polyline', { points: M.slice(0, first).map((d, i) => `${x(i)},${y(d.sales)}`).join(' '), fill: 'none', stroke: '#fff', 'stroke-width': 3, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, s);
+      el('circle', { cx: x(first - 1), cy: y(M[first - 1].sales), r: 5, fill: '#fff' }, s);
+      const hint = el('text', { x: (zx + x(n - 1)) / 2, y: m.t + ih * 0.3, 'text-anchor': 'middle', 'font-size': narrow ? 14 : 16, 'font-weight': 700, fill: '#fff', opacity: 0.85 }, s, narrow ? 'Draw 2018 here' : 'Drag here to draw 2018');
+      const gLine = el('polyline', { fill: 'none', stroke: DARK.guess, 'stroke-width': 3, 'stroke-dasharray': '2 7', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, s);
+      const gDots = el('g', {}, s);
+      geo = { s, m, iw, ih, x, y, hint, gLine, gDots };
+      if (shown) {
+        const actual = el('polyline', { points: M.slice(first - 1).map((d, i) => `${x(first - 1 + i)},${y(d.sales)}`).join(' '), fill: 'none', stroke: DARK.sales, 'stroke-width': 3.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', pathLength: 1, class: 'actual' }, s);
+        const end = el('g', { opacity: animate && !still ? 0 : 1 }, s);
+        el('circle', { cx: x(n - 1), cy: y(M[n - 1].sales), r: 5.5, fill: DARK.sales }, end);
+        el('text', { x: x(n - 1), y: y(M[n - 1].sales) + 24, 'text-anchor': 'end', 'font-size': 14, 'font-weight': 700, fill: '#fff' }, end, 'What happened: ' + f.k(M[n - 1].sales));
+        if (animate && !still) {
+          setTimeout(() => { actual.style.strokeDashoffset = 0; }, 60);
+          setTimeout(() => { end.setAttribute('opacity', 1); }, 1500);
+        } else actual.style.strokeDashoffset = 0;
+        animate = false;
+      } else {
+        const zone = el('rect', { x: zx, y: m.t, width: x(n - 1) - zx + 12, height: ih, fill: 'transparent', class: 'zone' }, s);
+        let down = false;
+        zone.addEventListener('pointerdown', (e) => { down = true; lastI = null; zone.setPointerCapture(e.pointerId); put(e); e.preventDefault(); });
+        zone.addEventListener('pointermove', (e) => { if (down) put(e); });
+        const up = () => { down = false; lastI = null; };
+        zone.addEventListener('pointerup', up);
+        zone.addEventListener('pointercancel', up);
+      }
+      paint();
+    }
+    function put(e) {
+      const b = geo.s.getBoundingClientRect();
+      const i = Math.max(first, Math.min(n - 1, Math.round((e.clientX - b.left - geo.m.l) / geo.iw * (n - 1))));
+      const v = Math.max(0, Math.min(MAX, (1 - (e.clientY - b.top - geo.m.t) / geo.ih) * MAX));
+      if (lastI !== null && Math.abs(i - lastI) > 1) {
+        const a = guess[lastI], stepDir = i > lastI ? 1 : -1;
+        for (let k = lastI + stepDir; k !== i; k += stepDir) guess[k] = a + (v - a) * (k - lastI) / (i - lastI);
+      }
+      guess[i] = v; lastI = i;
+      paint();
+    }
+    function paint() {
+      const pts = [[first - 1, M[first - 1].sales]];
+      for (let i = first; i < n; i++) if (guess[i] !== null) pts.push([i, guess[i]]);
+      geo.gLine.setAttribute('points', pts.length > 1 ? pts.map(([i, v]) => `${geo.x(i)},${geo.y(v)}`).join(' ') : '');
+      geo.gDots.textContent = '';
+      pts.slice(1).forEach(([i, v]) => el('circle', { cx: geo.x(i), cy: geo.y(v), r: 4.5, fill: DARK.guess }, geo.gDots));
+      geo.hint.setAttribute('opacity', pts.length > 1 || shown ? 0 : 0.85);
+      const done = guess.slice(first).every((v) => v !== null);
+      show.disabled = !done;
+      if (!shown) out.textContent = pts.length > 1 && !done ? 'Keep going until you reach August.' : '';
+    }
+    function reveal(drew) {
+      shown = true; animate = true;
+      build();
+      const actual = M[n - 1].sales, peak = Math.max(...M.map((d) => d.sales));
+      const sellers = ` Over those eight months the number of active sellers rose from ${f.int(M[first].sellers)} to ${f.int(M[n - 1].sellers)}.`;
+      let text;
+      if (!drew) text = `Sales peaked at ${f.k(peak)} in November 2017 and stood at ${f.k(actual)} in August 2018.` + sellers;
+      else {
+        const g = guess[n - 1];
+        const verdict = g > actual * 1.15 ? 'You expected the growth to continue, which is what adding sellers is supposed to buy.'
+          : g < actual * 0.85 ? 'You were more pessimistic than the facts.' : 'You were close.';
+        text = `You drew August at ${f.k(g)}, and it came in at ${f.k(actual)}. ${verdict}` + sellers;
+      }
+      out.textContent = text;
+      show.hidden = true; skip.hidden = true; again.hidden = false;
+    }
+    show.addEventListener('click', () => reveal(true));
+    skip.addEventListener('click', () => reveal(false));
+    again.addEventListener('click', () => {
+      guess = new Array(n).fill(null); shown = false;
+      show.hidden = false; skip.hidden = false; again.hidden = true; out.textContent = '';
+      build();
+    });
+    build();
+    const re = () => { if (Math.floor(node.clientWidth) !== width) build(); };
+    if ('ResizeObserver' in window) new ResizeObserver(re).observe(node); else window.addEventListener('resize', re);
+  })();
+
+  /* 200 orders as dots */
+  (function () {
+    const node = document.getElementById('dots');
+    if (!node) return;
+    const say = document.getElementById('dots-say'), buttons = [...document.querySelectorAll('#dots-seg button')];
+    const G = DATA.low_groups, N = 200;
+    const NAMES = { never_arrived: 'Never arrived', late: 'Arrived late', split_sellers: 'On time, from several sellers', several_items: 'On time, several items', ordinary: 'On time, a single item' };
+    /* Whole dots that add up to the total: round down, then hand out the remainder by size of the fraction. */
+    function share(values, total) {
+      const sum = values.reduce((a, b) => a + b, 0), raw = values.map((v) => v / sum * total), base = raw.map(Math.floor);
+      const left = total - base.reduce((a, b) => a + b, 0);
+      raw.map((v, i) => [v - base[i], i]).sort((a, b) => b[0] - a[0]).slice(0, left).forEach(([, i]) => { base[i] += 1; });
+      return base;
+    }
+    const orders = share(G.map((g) => g.orders), N);
+    const badTotal = Math.round(G.reduce((a, g) => a + g.low, 0) / G.reduce((a, g) => a + g.orders, 0) * N);
+    const bad = share(G.map((g) => g.low), badTotal).map((b, i) => Math.min(b, orders[i]));
+    let delay = 0;
+    G.forEach((g, i) => {
+      const wrong = g.key !== 'ordinary';
+      const box = h('div', 'dgroup' + (wrong ? ' wrong' : ''), node);
+      box.tabIndex = 0;
+      const head = h('div', 'dgroup-head', box, NAMES[g.key]);
+      h('span', '', head, orders[i] + ' of 200');
+      const grid = h('div', 'dgrid', box);
+      const cols = orders[i] > 60 ? 17 : orders[i] > 9 ? 4 : Math.min(3, orders[i]);
+      grid.style.gridTemplateColumns = `repeat(${cols}, max-content)`;
+      for (let k = 0; k < orders[i]; k++) {
+        const d = h('i', k < bad[i] ? 'b' : '', grid);
+        if (k < bad[i]) { d.style.transitionDelay = (delay * 28) + 'ms'; delay += 1; }
+      }
+      hover(box, NAMES[g.key], [['Share of all orders', f.pct(g.share_orders, 1)], ['Got a bad review', f.pct(g.low_rate, 0)], ['Share of all bad reviews', f.pct(g.share_low, 0)]]);
+    });
+    const wrongOrders = orders.slice(0, 4).reduce((a, b) => a + b, 0), wrongBad = bad.slice(0, 4).reduce((a, b) => a + b, 0);
+    function set(state) {
+      node.classList.toggle('show-bad', state === 1);
+      buttons.forEach((b, i) => b.setAttribute('aria-pressed', i === state));
+      say.textContent = state === 0
+        ? `Of every 200 orders, ${orders[4]} are ordinary: one item, delivered on time. The other ${wrongOrders}, in blue, went wrong in one of four ways.`
+        : `${badTotal} of the 200 end in a bad review, shown in orange. The ${wrongOrders} orders that went wrong produce ${wrongBad} of them.`;
+    }
+    buttons.forEach((b, i) => b.addEventListener('click', () => set(i)));
+    set(0);
+    document.getElementById('dots-fig').addEventListener('reveal', () => setTimeout(() => set(1), still ? 0 : 1800));
+  })();
+
+  /* Sliders: what fixing each problem would do to the share of bad reviews */
+  (function () {
+    const box = document.getElementById('levers');
+    if (!box) return;
+    const G = {}; DATA.low_groups.forEach((g) => { G[g.key] = g; });
+    const base = G.ordinary.low_rate;
+    const today = DATA.low_groups.reduce((a, g) => a + g.share_orders * g.low_rate, 0);
+    const multiRate = (G.split_sellers.low + G.several_items.low) / (G.split_sellers.orders + G.several_items.orders);
+    const perMonth = DATA.periods.latest.orders_pm;
+    const L = [
+      { key: 'late', name: 'Orders that arrive late', now: G.late.share_orders, min: 0.02, unit: ' of orders', d: 1, preset: DATA.late.normal_rate, chip: 'Like an ordinary month' },
+      { key: 'never', name: 'Orders that never arrive', now: G.never_arrived.share_orders, min: 0.01, unit: ' of orders', d: 1, preset: DATA.undelivered.rate_latest, chip: 'Like the last three months' },
+      { key: 'multi', name: 'Bad reviews on multi-item orders', now: multiRate, min: base, unit: ' of them', d: 0, preset: base, chip: 'Like single-item orders' },
+    ];
+    const left = h('div', '', box), right = h('div', 'lever-out', box);
+    h('div', 'lo-label', right, 'Share of orders that end in a bad review');
+    const big = h('div', 'lo-big', right), from = h('div', 'lo-from', right, 'It is ' + f.pct(today, 1) + ' today.');
+    const fill = h('i', '', h('div', 'lo-bar', right));
+    const sayOut = h('p', 'lo-say', right);
+    const reset = h('button', 'chip', right, 'Put everything back'); reset.type = 'button';
+    from.setAttribute('aria-hidden', 'false');
+    L.forEach((l) => {
+      const row = h('div', 'lever', left), top = h('label', 'lever-top', row);
+      h('span', '', top, l.name);
+      l.out = h('output', '', top);
+      l.input = h('input', '', row);
+      Object.assign(l.input, { type: 'range', min: l.min, max: l.now, step: (l.now - l.min) / 100, value: l.now });
+      l.input.setAttribute('aria-label', l.name);
+      const foot = h('div', 'lever-foot', row);
+      h('span', '', foot, 'Today: ' + f.pct(l.now, l.d));
+      const chip = h('button', 'chip', foot, l.chip + ' (' + f.pct(l.preset, l.d) + ')'); chip.type = 'button';
+      chip.addEventListener('click', () => { l.input.value = l.preset; calc(); });
+      l.input.addEventListener('input', calc);
+    });
+    function calc() {
+      const v = {}; L.forEach((l) => { v[l.key] = +l.input.value; l.out.textContent = f.pct(v[l.key], l.d) + l.unit; });
+      const t = (v.multi - base) / (multiRate - base);
+      const ordinary = G.ordinary.share_orders + (G.late.share_orders - v.late) + (G.never_arrived.share_orders - v.never);
+      const rate = v.never * G.never_arrived.low_rate + v.late * G.late.low_rate + ordinary * base
+        + G.split_sellers.share_orders * (base + (G.split_sellers.low_rate - base) * t)
+        + G.several_items.share_orders * (base + (G.several_items.low_rate - base) * t);
+      big.textContent = f.pct(rate, 1);
+      fill.style.width = (rate / today * 100) + '%';
+      const saved = today - rate;
+      sayOut.textContent = saved < 0.0005
+        ? 'Move a slider to the left to see what an improvement would be worth.'
+        : `That is ${f.int(saved * 10000)} fewer unhappy customers in every 10,000 orders, or about ${f.int(saved * perMonth)} a month at the current pace.`;
+    }
+    reset.addEventListener('click', () => { L.forEach((l) => { l.input.value = l.now; }); calc(); });
+    calc();
+  })();
+
+  /* ---------- Third pass: scrub the opening chart, pick a seat, present as slides ---------- */
+  (function () {
+    const fig = document.querySelector('.hero-fig');
+    if (!fig) return;
+    fig.addEventListener('reveal', () => {
+      if (still || !heroSet) return;
+      let i = 0;
+      const t = setInterval(() => { heroSet(i, true); i += 1; if (i >= M.length) { clearInterval(t); setTimeout(() => heroSet && heroSet(M.length - 1, false), 400); } }, 100);
+    });
+  })();
+
+  (function () {
+    const lens = document.getElementById('lens');
+    if (!lens) return;
+    const buttons = [...lens.querySelectorAll('.seg button')], cards = [...lens.querySelectorAll('.lens-card')];
+    function pick(role, mark) {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', b.dataset.role === role));
+      cards.forEach((c) => { c.hidden = c.dataset.for !== role; });
+      const hot = cards.find((c) => c.dataset.for === role).dataset.hot.split(' ');
+      document.querySelectorAll('.pair-row').forEach((r) => r.classList.toggle('hot', mark && hot.includes(r.getAttribute('href'))));
+    }
+    buttons.forEach((b) => b.addEventListener('click', () => pick(b.dataset.role, true)));
+  })();
+
+  (function () {
+    const deck = document.getElementById('deck');
+    if (!deck) return;
+    const slides = [...deck.querySelectorAll('.slide')], dots = deck.querySelector('.deck-dots'), count = deck.querySelector('.deck-count');
+    let i = 0;
+    slides.forEach((_, k) => { const d = h('button', '', dots); d.type = 'button'; d.setAttribute('aria-label', 'Go to slide ' + (k + 1)); d.addEventListener('click', () => go(k)); });
+    function go(k) {
+      i = Math.max(0, Math.min(slides.length - 1, k));
+      slides.forEach((sl, j) => sl.classList.toggle('on', j === i));
+      [...dots.children].forEach((d, j) => d.classList.toggle('on', j === i));
+      count.textContent = (i + 1) + ' / ' + slides.length;
+      slides[i].querySelectorAll('.count').forEach((nd) => { if (!nd.dataset.t) nd.dataset.t = nd.textContent; nd.textContent = nd.dataset.t; countUp(nd); });
+    }
+    function open() {
+      deck.hidden = false; document.body.style.overflow = 'hidden'; go(0); deck.focus();
+      if (deck.requestFullscreen) deck.requestFullscreen().catch(() => {});
+    }
+    function close() {
+      deck.hidden = true; document.body.style.overflow = '';
+      if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+    }
+    document.querySelectorAll('[data-present]').forEach((b) => b.addEventListener('click', open));
+    deck.querySelector('.deck-close').addEventListener('click', close);
+    deck.querySelector('.deck-prev').addEventListener('click', () => go(i - 1));
+    deck.querySelector('.deck-next').addEventListener('click', () => go(i + 1));
+    deck.addEventListener('click', (e) => { if (!e.target.closest('button, a')) go(i + 1); });
+    document.addEventListener('keydown', (e) => {
+      if (deck.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); go(i + 1); }
+      else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(i - 1); }
+    });
+    document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && !deck.hidden) close(); });
+  })();
+
+  /* Numbers count up, things fade in, and a thin bar shows how far down the page you are */
+  function countUp(node) {
+    const mt = node.textContent.match(/^(\D*?)(\d[\d,]*\.?\d*)(.*)$/);
+    if (!mt || still) return;
+    const end = parseFloat(mt[2].replace(/,/g, '')), dec = (mt[2].split('.')[1] || '').length, t0 = performance.now();
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / 1000), v = end * (1 - Math.pow(1 - p, 3));
+      node.textContent = mt[1] + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + mt[3];
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const reveals = [...document.querySelectorAll('.anim')];
+  function seen(node) {
+    if (node.classList.contains('in')) return;
+    node.classList.add('in');
+    node.querySelectorAll('.count, .k-value').forEach(countUp);
+    node.dispatchEvent(new Event('reveal'));
+  }
+  if (still || !('IntersectionObserver' in window)) reveals.forEach(seen);
+  else {
+    const ro = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { seen(e.target); ro.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+    reveals.forEach((r) => ro.observe(r));
+  }
+  window.addEventListener('beforeprint', () => reveals.forEach((r) => r.classList.add('in')));
+  const bar = document.getElementById('progress');
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+      /* A safety net in case the observer above misses something that is already on screen. */
+      reveals.forEach((r) => { if (!r.classList.contains('in') && r.getBoundingClientRect().top < window.innerHeight * 0.92) seen(r); });
+      ticking = false;
+    });
+  }, { passive: true });
 
   /* Top bar: mark the section in view, and print */
   document.getElementById('print').addEventListener('click', () => window.print());

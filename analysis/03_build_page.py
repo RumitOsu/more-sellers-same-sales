@@ -190,7 +190,7 @@ TOK = {
 }
 
 DATA = {k: R[k] for k in ("monthly", "periods", "bridge", "low_groups", "score_by_gap", "tiers", "traction",
-                          "states", "categories", "category_count")}
+                          "states", "categories", "category_count", "late", "undelivered")}
 DATA["customers"] = {"repeat_rate": CU["repeat_rate"]}
 
 src = (ROOT / "site" / "src.html").read_text(encoding="utf-8")
