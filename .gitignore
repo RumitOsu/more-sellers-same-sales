@@ -1,0 +1,6 @@
+.venv/
+data/raw/
+data/*.duckdb
+data/*.duckdb.wal
+__pycache__/
+*.pyc
