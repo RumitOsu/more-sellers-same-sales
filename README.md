@@ -1,6 +1,6 @@
 # More Sellers, Same Sales
 
-A business review of the Brazilian marketplace Olist, written the way I would write it for a company's leadership team. It opens with an executive summary that takes two minutes to read, gives the evidence behind each point, and ends with four recommendations.
+A business review of the Brazilian marketplace Olist, written the way I would write it for a company's leadership team. The page asks you to pick a seat at the table (chief executive, operations, seller growth or customer experience) and gives that reader their own story, numbers and decisions. The full analysis is one click away.
 
 **Read it here: https://rumitosu.github.io/projects/more-sellers-same-sales/**
 

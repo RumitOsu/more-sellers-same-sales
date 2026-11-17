@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f2a4d">
+<meta name="theme-color" content="#0a1626">
 <meta name="description" content="A business review of the Brazilian marketplace Olist, built from about 100,000 real orders. It explains why adding sellers stopped lifting sales, where orders go wrong, and what to do about it. A data project by Timur Kherlenbayar.">
 <meta property="og:title" content="More Sellers, Same Sales — Timur Kherlenbayar">
 <meta property="og:description" content="A business review written for a leadership team, with an executive summary, the evidence behind it and four recommendations, built from about 100,000 real marketplace orders.">
@@ -12,225 +12,301 @@
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../../assets/fonts/type-home.css">
 <style>
-/* A committed light look: the page is meant to read like a report someone would print
-   and bring to a meeting. One reading column, wider exhibits, one blue and one orange. */
+/* A dark page. Deep navy, one blue and one coral, and one idea on screen at a time.
+   The reader picks a seat on the cover and the body attribute data-seat decides what shows. */
 :root {
-  color-scheme: light;
-  --paper: #f4f3ee;
-  --card: #ffffff;
-  --ink: #121a26;
-  --ink-2: #39424f;
-  --muted: #6a707a;
-  --rule: #e1dfd7;
-  --rule-2: #c9c6bb;
-  --navy: #0f2a4d;
-  --blue: #2a78d6;
-  --blue-wash: #eaf2fc;
-  --orange: #eb6834;
-  --orange-wash: #fdefe8;
-  --aqua: #1baf7a;
-  --grey-mark: #b9bcc2;
-  --good: #006300;
-  --bad: #b42318;
+  color-scheme: dark;
+  --bg: #0a1626; --panel: #11233e; --panel-2: #172f50;
+  --ink: #f2f6fc; --ink-2: #c5d1e3; --muted: #8a9fbc;
+  --rule: #213a5c; --rule-2: #33527e;
+  --blue: #4c94ea; --orange: #e8683a; --aqua: #5fd0c5; --grey-mark: #566c8c;
+  --good: #58d39a; --bad: #ff8577;
   --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
   --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; }
-body { margin: 0; background: var(--paper); color: var(--ink-2); font: 17px/1.65 var(--sans); -webkit-font-smoothing: antialiased; }
-a { color: #1c5cab; text-underline-offset: 3px; }
-a:hover { color: var(--navy); }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 70px; }
+body { margin: 0; color: var(--ink-2); font: 17.5px/1.65 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  background: radial-gradient(1100px 700px at 88% -8%, #173a6b 0%, transparent 62%) fixed, radial-gradient(900px 700px at -10% 108%, rgba(255, 138, 92, .10) 0%, transparent 60%) fixed, var(--bg); }
+a { color: #8fbcf5; text-underline-offset: 3px; }
+a:hover { color: #fff; }
 p { margin: 0 0 1.1em; }
 strong, b { color: var(--ink); font-weight: 700; }
-h1, h2, h3 { color: var(--navy); margin: 0; }
-.pad { padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
-.col { max-width: 720px; margin: 0 auto; }
-.wide { max-width: 1040px; margin: 0 auto; }
-.label { font: 700 12px/1.3 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 0; }
-.num { font-variant-numeric: tabular-nums; }
-:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 3px; }
+h1, h2, h3 { color: #fff; margin: 0; }
+.pad { padding-left: max(22px, env(safe-area-inset-left, 0px)); padding-right: max(22px, env(safe-area-inset-right, 0px)); }
+.wide { max-width: 1120px; margin: 0 auto; }
+.wrap { max-width: 860px; margin: 0 auto; }
+.label, .kicker { font: 700 12.5px/1.3 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0; }
+:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 4px; }
+#progress { position: fixed; top: 0; left: 0; z-index: 40; width: 100%; height: 3px; background: var(--orange); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* Things arrive as you scroll: text rises, visuals rise and settle, the takeaway slides in from the side. */
+.js .anim { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .9s cubic-bezier(.2, .7, .2, 1); }
+.js .kicker.anim { transform: translateY(12px); }
+.js .vis.anim { transform: translateY(40px) scale(.97); transition-delay: .1s; }
+.js .for.anim, .js .measure.anim { transform: translateX(-34px); transition-delay: .15s; }
+.js .decide li.anim:nth-child(2) { transition-delay: .12s; }
+.js .decide li.anim:nth-child(3) { transition-delay: .24s; }
+.js .anim.in { opacity: 1; transform: none; }
+.grow { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .9s cubic-bezier(.2, .8, .2, 1) .2s; }
+.js .anim:not(.in) .grow { transform: scaleY(0); }
+.draw { stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 2.2s ease .2s; }
+.js .anim:not(.in) .draw { stroke-dashoffset: 1; }
+.pop { transition: opacity .5s ease 1.8s; }
+.js .anim:not(.in) .pop { opacity: 0; }
+.meter .fill { transition: width 1s cubic-bezier(.2, .8, .2, 1) .25s; }
+.js .anim:not(.in) .meter .fill { width: 0 !important; }
+.waffle i.back { transition: background-color .4s ease 1s, transform .4s ease 1s; }
+.js .anim:not(.in) .waffle i.back { background: var(--rule); transform: scale(.6); }
+.js .anim:not(.in) .eq-tile, .js .anim:not(.in).eq > i { opacity: 0; transform: translateY(16px); }
+.eq-tile, .eq > i { transition: opacity .6s ease, transform .6s ease; }
+.eq-tile:nth-of-type(2), .eq > i:nth-of-type(1) { transition-delay: .35s; }
+.eq > i:nth-of-type(2) { transition-delay: .7s; }
+.eq-tile:nth-of-type(3) { transition-delay: .9s; }
 
 /* Top bar */
-.bar { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--rule); }
-.bar-in { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 18px; height: 54px; }
-.bar a.home { font-weight: 700; color: var(--navy); text-decoration: none; white-space: nowrap; font-size: 14.5px; }
-.bar nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; flex: 1; }
-.bar nav::-webkit-scrollbar { display: none; }
-.bar nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; padding: 6px 10px; border-radius: 6px; white-space: nowrap; }
-.bar nav a:hover, .bar nav a.on { color: var(--navy); background: var(--blue-wash); }
-.btn { font: 700 13.5px/1 var(--sans); color: var(--navy); background: var(--card); border: 1px solid var(--rule-2); border-radius: 7px; padding: 9px 13px; cursor: pointer; white-space: nowrap; }
-.btn:hover { background: var(--blue-wash); border-color: var(--blue); }
+.bar { position: sticky; top: 0; z-index: 30; background: rgba(10, 22, 38, .9); border-bottom: 1px solid var(--rule); }
+.bar-in { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 14px; height: 54px; }
+.bar a.home { font-weight: 700; color: #fff; text-decoration: none; white-space: nowrap; font-size: 14.5px; margin-right: auto; }
+.seat-pick { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.seat-pick select { font: 700 14px/1 var(--sans); color: #fff; background: var(--panel); border: 1px solid var(--rule-2); border-radius: 8px; padding: 8px 10px; cursor: pointer; text-transform: none; letter-spacing: 0; }
+.btn { font: 700 13.5px/1 var(--sans); color: var(--ink-2); background: transparent; border: 1px solid var(--rule-2); border-radius: 8px; padding: 9px 12px; cursor: pointer; white-space: nowrap; }
+.btn:hover { color: #fff; border-color: var(--blue); }
+.cta { display: inline-block; font: 700 15px/1 var(--sans); color: #0a1626; background: #fff; border: 1px solid #fff; border-radius: 10px; padding: 13px 18px; text-decoration: none; cursor: pointer; transition: transform .15s ease, background-color .15s ease; }
+.cta:hover { transform: translateY(-2px); background: #dfeaf9; color: #0a1626; }
+.cta.ghost { background: transparent; color: #fff; border-color: var(--rule-2); }
+.cta.ghost:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+.cta[hidden] { display: none; }
+.cta[disabled] { opacity: .4; cursor: not-allowed; transform: none; }
 
 /* Cover */
-.cover { background: var(--navy); color: #dbe5f3; padding-top: 68px; padding-bottom: 150px; }
-.cover .label { color: #9fb6d6; }
-.cover h1 { color: #fff; font: 600 clamp(42px, 7vw, 78px)/1.02 var(--serif); letter-spacing: -.015em; margin: 18px 0 22px; }
-.cover .dek { font: 400 clamp(19px, 2.2vw, 23px)/1.5 var(--serif); color: #e6edf7; max-width: 760px; margin: 0 0 30px; }
-.byline { display: flex; flex-wrap: wrap; gap: 6px 26px; font-size: 14.5px; color: #b9c9df; margin: 0; padding: 0; list-style: none; }
-.byline b { color: #fff; font-weight: 700; }
-.about { margin-top: 34px; max-width: 760px; border-left: 3px solid #4b79b8; padding: 2px 0 2px 18px; font-size: 15.5px; line-height: 1.6; color: #c8d5e8; }
-.about b { color: #fff; }
-.about a { color: #cfe0f7; }
+.cover { min-height: calc(100vh - 54px); display: flex; align-items: center; padding-top: 40px; padding-bottom: 56px; }
+.cover > .wide { width: 100%; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 60px); align-items: center; }
+.cover h1 { font: 600 clamp(44px, 7vw, 88px)/1.02 var(--serif); letter-spacing: -.018em; margin: 16px 0 18px; }
+.dek { font: 400 clamp(18.5px, 2vw, 22px)/1.5 var(--serif); color: #dbe5f3; max-width: 560px; margin: 0; }
+.hero-fig { margin: 0; }
+.hero-read { display: flex; flex-wrap: wrap; gap: 4px 20px; min-height: 1.7em; margin-bottom: 8px; font-size: 13.5px; color: var(--muted); }
+.hero-read b { color: #fff; font-size: 15.5px; font-variant-numeric: tabular-nums; }
+#hero-chart { cursor: ew-resize; }
+.seats { margin-top: clamp(30px, 6vh, 64px); }
+.seats-label { font: 600 clamp(20px, 2.2vw, 26px)/1.2 var(--serif); color: #fff; margin: 0 0 16px; }
+.seat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.seat { position: relative; text-align: left; font: inherit; color: var(--ink-2); background: linear-gradient(160deg, var(--panel-2), var(--panel)); border: 1px solid var(--rule-2); border-radius: 14px; padding: 20px 20px 44px; cursor: pointer; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.seat b { display: block; font: 600 21px/1.2 var(--serif); color: #fff; margin-bottom: 8px; }
+.seat span { display: block; font-size: 15px; line-height: 1.45; }
+.seat i { position: absolute; left: 20px; bottom: 14px; font: 700 20px/1 var(--sans); color: var(--orange); font-style: normal; transition: transform .2s ease; }
+.seat:hover, .seat[aria-pressed="true"] { transform: translateY(-5px); border-color: var(--orange); box-shadow: 0 18px 40px -22px rgba(255, 138, 92, .7); }
+.seat:hover i { transform: translateX(8px); }
+.seat-all { margin-top: 16px; font: 700 15px/1 var(--sans); color: #8fbcf5; background: none; border: 0; padding: 6px 0; cursor: pointer; }
+.seat-all:hover { color: #fff; }
 
-/* Executive summary */
-.summary { margin-top: -104px; position: relative; }
-.sheet { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 18px 50px -28px rgba(15,42,77,.45); padding: clamp(22px, 4vw, 44px); }
-.sheet h2 { font: 600 clamp(26px, 3vw, 34px)/1.15 var(--serif); margin: 8px 0 16px; }
-.lead { font: 400 clamp(18px, 1.9vw, 20.5px)/1.58 var(--serif); color: var(--ink); max-width: 820px; }
-.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 26px 0 8px; }
-.kpi { border: 1px solid var(--rule); border-radius: 10px; padding: 14px 14px 10px; background: #fcfcfb; min-width: 0; }
+/* What shows for which seat */
+.brief, .ask, .for { display: none; }
+body[data-seat="ceo"] [data-seat~="ceo"], body[data-seat="ops"] [data-seat~="ops"], body[data-seat="sellers"] [data-seat~="sellers"],
+body[data-seat="cx"] [data-seat~="cx"], body[data-seat="full"] [data-seat~="full"] { display: block; }
+body[data-seat="ceo"] .mod:not([data-seats~="ceo"]), body[data-seat="ops"] .mod:not([data-seats~="ops"]), body[data-seat="sellers"] .mod:not([data-seats~="sellers"]),
+body[data-seat="cx"] .mod:not([data-seats~="cx"]), body[data-seat="full"] .mod:not([data-seats~="full"]) { display: none; }
+body[data-seat="full"] [data-hide="full"] { display: none; }
+
+/* The opening for a seat */
+#brief { scroll-margin-top: 54px; }
+.brief { max-width: 980px; margin: 0 auto; padding: clamp(70px, 13vh, 140px) 0 clamp(30px, 6vh, 60px); }
+.brief h2, .ask h2 { font: 600 clamp(30px, 4.6vw, 56px)/1.1 var(--serif); letter-spacing: -.015em; margin: 16px 0 20px; }
+.lede { font: 400 clamp(18.5px, 1.9vw, 21px)/1.55 var(--serif); color: #dbe5f3; max-width: 760px; }
+.nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 44px; border-top: 1px solid var(--rule); padding-top: 30px; }
+.nums b { display: block; font: 700 clamp(40px, 5.4vw, 68px)/1 var(--sans); letter-spacing: -.03em; color: #fff; white-space: nowrap; }
+.nums div:nth-child(1) b { color: var(--orange); }
+.nums span { display: block; margin-top: 10px; font-size: 15.5px; line-height: 1.45; color: var(--ink-2); max-width: 260px; }
+
+/* A chapter: one headline, one visual, one takeaway */
+#story { counter-reset: ch; }
+.mod { counter-increment: ch; padding: clamp(64px, 12vh, 130px) 0; scroll-margin-top: 30px; }
+.mod-in { max-width: 860px; margin: 0 auto; }
+.mod.widevis .mod-in { max-width: 1080px; }
+.kicker .num::before { content: counter(ch, decimal-leading-zero); color: var(--orange); margin-right: 12px; }
+.mod h2 { font: 600 clamp(28px, 3.8vw, 46px)/1.13 var(--serif); letter-spacing: -.012em; margin: 14px 0 18px; max-width: 860px; }
+.vis { margin: 34px 0 0; }
+.vis-title, .fig-note { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+.vis-title { margin: 0 0 12px; }
+.fig-note { margin: 12px 0 0; max-width: 860px; }
+.for, .measure { margin: 38px 0 0; max-width: 780px; padding: 4px 0 4px 22px; border-left: 3px solid var(--orange); font: 400 clamp(18px, 1.8vw, 20.5px)/1.55 var(--serif); color: #fff; }
+.for b { display: block; font: 700 12px/1.3 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+.measure { border-left-color: var(--blue); font-size: 17.5px; color: var(--ink-2); }
+.bignum b { display: block; font: 700 clamp(76px, 15vw, 190px)/.95 var(--sans); letter-spacing: -.045em; white-space: nowrap; background: linear-gradient(100deg, #fff 20%, #9cc4f7 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.bignum span { display: block; margin-top: 14px; font-size: 17px; color: var(--ink-2); max-width: 560px; }
+.bignum + .lede { margin-top: 26px; }
+.pairnum { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 60px); }
+.pairnum b { display: block; font: 700 clamp(60px, 10vw, 120px)/.95 var(--sans); letter-spacing: -.04em; color: #fff; }
+.pairnum div:last-child b { color: var(--orange); }
+.pairnum span { display: block; margin-top: 12px; font-size: 16.5px; line-height: 1.5; color: var(--ink-2); }
+
+/* Charts */
+.chart { position: relative; }
+.chart svg { display: block; overflow: visible; }
+.chart text { font-family: var(--sans); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14px; color: var(--ink-2); margin: 0 0 12px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
+.legend i.line { height: 3px; width: 20px; border-radius: 2px; vertical-align: 4px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: right; padding: 9px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+thead th { font-size: 12.5px; color: var(--muted); font-weight: 700; border-bottom: 1px solid var(--rule-2); vertical-align: bottom; white-space: normal; line-height: 1.3; }
+td:first-child { color: #fff; font-weight: 500; }
+#score th button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; }
+#score th button:hover, #score th[aria-sort] button { color: #fff; }
+#score th[aria-sort="descending"] button::after { content: " ↓"; }
+#score th[aria-sort="ascending"] button::after { content: " ↑"; }
+#score td .cellbar { display: inline-block; height: 8px; border-radius: 0 3px 3px 0; background: var(--orange); margin-left: 8px; opacity: .9; }
+#score td.barcell { text-align: left; min-width: 130px; }
+#score td.barcell span { display: inline-block; width: 44px; text-align: right; }
+#score .pos { color: var(--good); font-weight: 700; }
+#score .neg { color: var(--bad); font-weight: 700; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; background: rgba(255, 255, 255, .06); border-radius: 10px; padding: 4px; margin-bottom: 18px; }
+.seg button { font: 700 13.5px/1 var(--sans); border: 0; background: transparent; color: var(--ink-2); padding: 9px 13px; border-radius: 7px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: #fff; color: #0a1626; }
+.meter { display: flex; align-items: center; gap: 10px; font-size: 14.5px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+.meter .track { flex: 1; height: 13px; background: rgba(255, 255, 255, .07); border-radius: 3px; overflow: hidden; min-width: 30px; }
+.meter .fill { display: block; height: 100%; border-radius: 0 4px 4px 0; background: var(--blue); }
+.meter.grey .fill { background: var(--grey-mark); }
+.meter span.v { width: 46px; text-align: right; }
+.tiers .row { display: grid; grid-template-columns: minmax(150px, 1fr) 2.6fr; gap: 18px; align-items: center; padding: 13px 0; border-top: 1px solid var(--rule); }
+.tiers .row:first-of-type { border-top: 0; }
+.tiers .name b { display: block; font-size: 15.5px; line-height: 1.3; }
+.tiers .name span { font-size: 13px; color: var(--muted); }
+.tiers .bars { display: grid; gap: 5px; }
+.cust { display: grid; grid-template-columns: 250px 1fr; gap: 44px; align-items: center; }
+.waffle { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; width: 250px; }
+.waffle i { aspect-ratio: 1; border-radius: 4px; background: var(--rule); }
+.waffle i.back { background: var(--orange); }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 26px; margin: 0; }
+.facts div { border-top: 1px solid var(--rule-2); padding-top: 10px; }
+.facts dt { font: 700 28px/1.1 var(--sans); color: #fff; }
+.facts dd { margin: 4px 0 0; font-size: 14.5px; line-height: 1.45; }
+.eq { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 16px; align-items: center; }
+.eq > i { font: 400 38px/1 var(--serif); color: var(--muted); font-style: normal; }
+.eq-tile { background: var(--panel); border: 1px solid var(--rule); border-radius: 16px; padding: 26px 18px; text-align: center; border-top: 5px solid var(--blue); }
+.eq-tile.down { border-top-color: var(--orange); }
+.eq-tile.total { background: #fff; border-color: #fff; border-top-color: var(--orange); }
+.eq-tile b { display: block; font: 700 clamp(36px, 5.6vw, 64px)/1 var(--sans); color: #fff; letter-spacing: -.025em; }
+.eq-tile span { display: block; margin-top: 10px; font-size: 15px; color: var(--muted); font-weight: 500; }
+.eq-tile.total b { color: #0a1626; }
+.eq-tile.total span { color: #3c4c63; }
+.dots { display: flex; flex-wrap: wrap; gap: 24px 34px; align-items: flex-start; }
+.dgroup-head { font-size: 14px; line-height: 1.3; color: #fff; font-weight: 700; margin-bottom: 9px; }
+.dgroup-head span { display: block; font-weight: 500; color: var(--muted); }
+.dgrid { display: grid; gap: 5px; }
+.dgrid i { width: 14px; height: 14px; border-radius: 50%; background: #3a4f70; transition: background-color .35s ease, transform .35s ease; }
+.dgroup.wrong .dgrid i { background: var(--blue); }
+.dots.show-bad .dgrid i.b { background: var(--orange); transform: scale(1.15); }
+.dots.show-bad .dgrid i:not(.b) { background: #1d3050; }
+.dots-say { font: 400 clamp(18px, 1.9vw, 21px)/1.5 var(--serif); color: #fff; margin: 22px 0 0; min-height: 3em; max-width: 780px; }
+.map-wrap { display: grid; grid-template-columns: minmax(0, 430px) 1fr; gap: 44px; align-items: center; }
+.tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+.tile { aspect-ratio: 1; border-radius: 7px; display: flex; flex-direction: column; align-items: center; justify-content: center; font: 12px/1.15 var(--sans); cursor: default; border: 0; padding: 0; transition: background-color .3s ease, transform .15s ease; }
+.tile b { font-size: 13px; color: inherit; }
+.tile:hover, .tile:focus-visible { transform: scale(1.1); outline: 2px solid #fff; outline-offset: 1px; }
+.ramp { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); margin-top: 14px; }
+.ramp i { flex: 1; max-width: 190px; height: 10px; border-radius: 3px; background: linear-gradient(90deg, #163258, #3987e5, #cde2fb); }
+.map-side { margin: 0; padding: 0; list-style: none; font-size: 16.5px; }
+.map-side li { padding: 14px 0; border-top: 1px solid var(--rule); line-height: 1.5; }
+.map-side li:first-child { border-top: 0; }
+#draw { touch-action: pan-y; }
+#draw .zone { cursor: crosshair; touch-action: none; }
+#draw .actual { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease; }
+.play-actions, .next-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.play-out { margin: 18px 0 0; font: 400 clamp(18px, 1.9vw, 21px)/1.5 var(--serif); color: #fff; min-height: 1.5em; max-width: 780px; }
+.levers { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(22px, 5vw, 60px); align-items: center; }
+.lever { padding: 14px 0; border-top: 1px solid var(--rule); }
+.lever:first-child { border-top: 0; }
+.lever-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: #fff; font-weight: 700; font-size: 16px; }
+.lever-top output { font: 700 20px/1 var(--sans); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lever input[type=range] { width: 100%; margin: 12px 0 8px; accent-color: var(--orange); cursor: pointer; }
+.lever-foot { display: flex; justify-content: space-between; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); }
+.chip { font: 700 12.5px/1 var(--sans); color: var(--ink-2); background: rgba(255, 255, 255, .06); border: 1px solid var(--rule-2); border-radius: 99px; padding: 7px 11px; cursor: pointer; }
+.chip:hover { background: rgba(255, 255, 255, .16); color: #fff; }
+.lever-out { background: var(--panel); border: 1px solid var(--rule); border-radius: 16px; padding: 26px; }
+.lo-label { font: 700 12px/1.3 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.lo-big { font: 700 clamp(48px, 6.5vw, 76px)/1 var(--sans); color: #fff; letter-spacing: -.03em; margin: 8px 0 6px; font-variant-numeric: tabular-nums; }
+.lo-from { font-size: 14.5px; color: var(--ink-2); }
+.lo-bar { height: 12px; border-radius: 6px; background: rgba(255, 255, 255, .08); margin: 16px 0; overflow: hidden; }
+.lo-bar i { display: block; height: 100%; border-radius: 6px; background: var(--orange); transition: width .25s ease; }
+.lo-say { font: 400 17.5px/1.5 var(--serif); color: #fff; margin: 0 0 14px; min-height: 4.5em; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 34px; }
+.kpi { border: 1px solid var(--rule); border-radius: 12px; padding: 14px 14px 10px; background: var(--panel); min-width: 0; }
 .kpi .k-label { font-size: 13.5px; font-weight: 500; color: var(--muted); line-height: 1.3; min-height: 2.6em; }
-.kpi .k-value { font: 700 28px/1.1 var(--sans); color: var(--ink); margin: 4px 0 6px; letter-spacing: -.01em; }
+.kpi .k-value { font: 700 27px/1.1 var(--sans); color: #fff; margin: 4px 0 6px; letter-spacing: -.01em; }
 .kpi .k-deltas { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
 .kpi .k-deltas span { display: block; }
 .kpi .up-good, .kpi .down-good { color: var(--good); font-weight: 700; }
 .kpi .up-bad, .kpi .down-bad { color: var(--bad); font-weight: 700; }
 .kpi .flat { color: var(--ink-2); font-weight: 700; }
 .kpi svg { display: block; width: 100%; height: 34px; margin-top: 8px; }
-.kpi-note { font-size: 13px; color: var(--muted); margin: 0 0 26px; }
-.two { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; border-top: 1px solid var(--rule); padding-top: 26px; }
-.two h3 { font: 700 13px/1.3 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
-.points { list-style: none; margin: 0; padding: 0; counter-reset: pt; }
-.points li { counter-increment: pt; position: relative; padding: 0 0 16px 40px; font-size: 16px; line-height: 1.55; }
-.points li::before { content: counter(pt); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border-radius: 50%; background: var(--blue-wash); color: var(--navy); font: 700 13.5px/26px var(--sans); text-align: center; }
-.points.do li::before { background: var(--navy); color: #fff; }
-.points li b { display: block; color: var(--ink); font-size: 16.5px; margin-bottom: 2px; }
-.points li a { font-size: 13.5px; font-weight: 700; white-space: nowrap; text-decoration: none; }
-.points li a:hover { text-decoration: underline; }
 
-/* Sections */
-section.part { padding-top: 84px; }
-.part-head { margin-bottom: 22px; }
-.part-head .label span { display: inline-block; min-width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; background: var(--navy); color: #fff; letter-spacing: 0; margin-right: 10px; }
-.part-head h2 { font: 600 clamp(27px, 3.4vw, 38px)/1.16 var(--serif); margin-top: 14px; letter-spacing: -.008em; }
-.part h3 { font: 700 20px/1.3 var(--sans); color: var(--ink); margin: 40px 0 12px; }
-.so-what { background: var(--blue-wash); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 18px 22px 6px; margin: 28px 0; }
-.so-what .label { color: #1c5cab; margin-bottom: 8px; }
-.so-what p { color: var(--ink); }
-.aside { background: #fbfaf6; border: 1px solid var(--rule); border-radius: 10px; padding: 18px 22px 6px; margin: 28px 0; font-size: 16px; }
-.aside .label { margin-bottom: 8px; }
-
-/* Figures */
-.fig { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 22px 22px 14px; margin: 26px auto; }
-.fig figcaption { margin-bottom: 14px; }
-.fig figcaption b { display: block; font: 700 17.5px/1.35 var(--sans); color: var(--ink); }
-.fig figcaption span { display: block; font-size: 14.5px; color: var(--muted); margin-top: 3px; }
-.fig-note { font-size: 13px; color: var(--muted); margin: 10px 0 0; line-height: 1.5; }
-.chart { position: relative; }
-.chart svg { display: block; overflow: visible; }
-.chart text { font-family: var(--sans); }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--ink-2); margin: 0 0 10px; }
-.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; vertical-align: -1px; }
-.legend i.line { height: 3px; width: 18px; border-radius: 2px; vertical-align: 4px; }
-.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
-.pair .mini b { display: block; font: 700 14.5px/1.3 var(--sans); color: var(--ink); margin-bottom: 6px; }
-details.nums { margin-top: 12px; font-size: 13.5px; }
-details.nums summary { cursor: pointer; color: #1c5cab; font-weight: 700; }
-.scroll { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: 14px; }
-th, td { text-align: right; padding: 8px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; font-variant-numeric: tabular-nums; }
-th:first-child, td:first-child { text-align: left; }
-thead th { font-size: 12.5px; color: var(--muted); font-weight: 700; border-bottom: 1px solid var(--rule-2); vertical-align: bottom; white-space: normal; line-height: 1.3; }
-td:first-child { color: var(--ink); font-weight: 500; }
-
-/* The five kinds of order */
-.kinds { display: grid; gap: 0; }
-.kinds .row { display: grid; grid-template-columns: minmax(180px, 1.5fr) 1fr 1.25fr 1.25fr; gap: 16px; align-items: center; padding: 13px 0; border-top: 1px solid var(--rule); }
-.kinds .row.head { border-top: 0; padding-top: 0; font-size: 12.5px; font-weight: 700; color: var(--muted); align-items: end; line-height: 1.3; }
-.kinds .name b { display: block; font-size: 15.5px; line-height: 1.3; }
-.kinds .name span { display: block; font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 2px; }
-.meter { display: flex; align-items: center; gap: 9px; font-size: 14.5px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
-.meter .track { flex: 1; height: 12px; background: #f0efea; border-radius: 3px; overflow: hidden; min-width: 30px; }
-.meter .fill { display: block; height: 100%; border-radius: 0 4px 4px 0; background: var(--blue); }
-.meter.orange .fill { background: var(--orange); }
-.meter.grey .fill { background: var(--grey-mark); }
-.meter span.v { width: 44px; text-align: right; }
-.kinds .row.plain .name b { color: var(--ink-2); font-weight: 500; }
-
-/* Waffle of customers */
-.cust { display: grid; grid-template-columns: 230px 1fr; gap: 30px; align-items: center; }
-.waffle { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; width: 230px; }
-.waffle i { aspect-ratio: 1; border-radius: 3px; background: #dfe3ea; }
-.waffle i.back { background: var(--orange); }
-.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; margin: 0; }
-.facts div { border-top: 2px solid var(--rule); padding-top: 9px; }
-.facts dt { font: 700 26px/1.1 var(--sans); color: var(--ink); }
-.facts dd { margin: 4px 0 0; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
-
-/* Tile map */
-.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; background: #f0efea; border-radius: 9px; padding: 4px; margin-bottom: 14px; }
-.seg button { font: 700 13.5px/1 var(--sans); border: 0; background: transparent; color: var(--ink-2); padding: 8px 12px; border-radius: 6px; cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--card); color: var(--navy); box-shadow: 0 1px 3px rgba(0,0,0,.14); }
-.map-wrap { display: grid; grid-template-columns: minmax(0, 420px) 1fr; gap: 30px; align-items: start; }
-.tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
-.tile { aspect-ratio: 1; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 12px; line-height: 1.15; cursor: default; border: 0; padding: 0; font-family: var(--sans); }
-.tile b { font-size: 13px; color: inherit; }
-.tile:hover, .tile:focus-visible { outline: 2px solid var(--navy); outline-offset: 1px; }
-.ramp { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); margin-top: 12px; }
-.ramp i { flex: 1; max-width: 190px; height: 10px; border-radius: 3px; background: linear-gradient(90deg, #cde2fb, #3987e5, #0d366b); }
-.map-side { font-size: 15.5px; }
-.map-side ul { margin: 0; padding: 0; list-style: none; }
-.map-side li { padding: 10px 0; border-top: 1px solid var(--rule); line-height: 1.5; }
-.map-side li:first-child { border-top: 0; padding-top: 0; }
-
-/* Two-bar rows for seller tiers */
-.tiers .row { display: grid; grid-template-columns: minmax(150px, 1fr) 2.4fr; gap: 16px; align-items: center; padding: 11px 0; border-top: 1px solid var(--rule); }
-.tiers .row:first-of-type { border-top: 0; }
-.tiers .name b { display: block; font-size: 15px; line-height: 1.3; }
-.tiers .name span { font-size: 13px; color: var(--muted); }
-.tiers .bars { display: grid; gap: 4px; }
-
-/* Recommendations */
-.recs { display: grid; gap: 18px; margin-top: 26px; }
-.rec { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; display: grid; grid-template-columns: 1.15fr 1fr; overflow: hidden; }
+/* Decisions */
+#asks { padding-bottom: 40px; }
+.ask { max-width: 980px; margin: 0 auto; padding: clamp(70px, 12vh, 130px) 0 10px; }
+.decide { list-style: none; margin: 30px 0 0; padding: 0; counter-reset: d; }
+.decide li { counter-increment: d; position: relative; padding: 26px 0 12px 78px; border-top: 1px solid var(--rule); }
+.decide li::before { content: counter(d); position: absolute; left: 0; top: 24px; width: 52px; height: 52px; border-radius: 50%; background: var(--orange); color: #0a1626; font: 700 24px/52px var(--sans); text-align: center; }
+.decide b { display: block; font: 600 clamp(20px, 2.3vw, 26px)/1.25 var(--serif); color: #fff; margin-bottom: 8px; }
+.decide p { max-width: 720px; }
+.questions { margin-top: 36px; background: var(--panel); border: 1px solid var(--rule); border-radius: 16px; padding: 26px 28px 14px; }
+.questions ul { margin: 14px 0 0; padding: 0; list-style: none; }
+.questions li { position: relative; padding: 0 0 14px 34px; font: 400 18px/1.5 var(--serif); color: #fff; }
+.questions li::before { content: "?"; position: absolute; left: 0; top: 2px; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--blue); color: var(--blue); font: 700 13px/20px var(--sans); text-align: center; }
+.next { max-width: 980px; margin: 70px auto 0; padding-top: 30px; border-top: 1px solid var(--rule); }
+.recs { display: grid; gap: 16px; margin-top: 30px; }
+.rec { background: var(--panel); border: 1px solid var(--rule); border-radius: 14px; display: grid; grid-template-columns: 1.1fr 1fr; overflow: hidden; }
 .rec-main { padding: 24px 26px 12px; }
-.rec-main .label { color: #1c5cab; }
-.rec-main h3 { font: 600 23px/1.25 var(--serif); color: var(--navy); margin: 8px 0 12px; }
+.rec-main .label { color: var(--orange); }
+.rec-main h3 { font: 600 23px/1.25 var(--serif); margin: 8px 0 12px; }
 .rec-main p { font-size: 16px; }
-.rec-side { background: #fafaf7; border-left: 1px solid var(--rule); padding: 20px 24px; margin: 0; }
+.rec-side { background: rgba(255, 255, 255, .03); border-left: 1px solid var(--rule); padding: 20px 24px; margin: 0; }
 .rec-side div { padding: 9px 0; border-top: 1px solid var(--rule); }
 .rec-side div:first-child { border-top: 0; padding-top: 2px; }
-.rec-side dt { font: 700 12px/1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.rec-side dd { margin: 3px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--ink); }
+.rec-side dt { font: 700 12px/1.3 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rec-side dd { margin: 3px 0 0; font-size: 14.5px; line-height: 1.5; color: #fff; }
 .conf { display: inline-flex; gap: 3px; margin-right: 8px; vertical-align: 1px; }
-.conf i { width: 9px; height: 9px; border-radius: 50%; background: #d6d9de; }
-.conf i.on { background: var(--navy); }
-.nots { list-style: none; padding: 0; margin: 14px 0 0; }
-.nots li { padding: 14px 0 2px; border-top: 1px solid var(--rule); }
-.nots b { display: block; margin-bottom: 3px; }
+.conf i { width: 9px; height: 9px; border-radius: 50%; background: var(--rule-2); }
+.conf i.on { background: var(--orange); }
 
-/* Scorecard */
-.card-tools { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-.card-tools p { margin: 0; font-size: 13.5px; color: var(--muted); }
-#score th button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; }
-#score th button:hover { color: var(--navy); }
-#score th[aria-sort] button { color: var(--navy); }
-#score th[aria-sort="descending"] button::after { content: " ↓"; }
-#score th[aria-sort="ascending"] button::after { content: " ↑"; }
-#score td .cellbar { display: inline-block; height: 8px; border-radius: 0 3px 3px 0; background: var(--orange); margin-left: 8px; vertical-align: 0; opacity: .85; }
-#score td.barcell { text-align: left; min-width: 130px; }
-#score td.barcell span { display: inline-block; width: 44px; text-align: right; }
-#score .pos { color: var(--good); font-weight: 700; }
-#score .neg { color: var(--bad); font-weight: 700; }
-
-/* Notes */
-.notes h3 { margin-top: 34px; }
-.notes dl { margin: 0; }
-.notes dt { font-weight: 700; color: var(--ink); margin-top: 14px; }
-.notes dd { margin: 2px 0 0; }
-.notes ul { padding-left: 20px; margin: 0 0 1.1em; }
-.notes li { margin-bottom: 9px; }
-
-footer.end { margin-top: 90px; background: var(--navy); color: #c8d5e8; padding-top: 44px; padding-bottom: 54px; font-size: 15.5px; }
-footer.end a { color: #fff; }
+/* Notes and footer */
+.notes { padding-top: 90px; padding-bottom: 30px; }
+.notes h2 { font: 600 clamp(24px, 3vw, 34px)/1.2 var(--serif); margin: 12px 0 22px; }
+details.acc { border: 1px solid var(--rule); border-radius: 12px; background: var(--panel); margin: 12px 0; padding: 0 20px; }
+details.acc > summary { cursor: pointer; font: 700 16.5px/1.3 var(--sans); color: #fff; padding: 16px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+details.acc > summary::-webkit-details-marker { display: none; }
+details.acc > summary::after { content: "+"; font: 400 24px/0.8 var(--sans); color: var(--blue); transition: transform .2s ease; }
+details.acc[open] > summary::after { transform: rotate(45deg); }
+details.acc > *:not(summary) { font-size: 16px; }
+details.acc > *:last-child { margin-bottom: 18px; }
+details.acc dt { font-weight: 700; color: #fff; margin-top: 12px; }
+details.acc dd { margin: 2px 0 0; }
+details.acc ul { padding-left: 20px; margin: 0 0 1em; }
+details.acc li { margin-bottom: 9px; }
+details.nums summary { cursor: pointer; color: #8fbcf5; font-weight: 700; font-size: 14px; }
+footer.end { margin-top: 60px; border-top: 1px solid var(--rule); padding-top: 40px; padding-bottom: 54px; font-size: 15.5px; }
 footer.end .wide { display: flex; flex-wrap: wrap; gap: 18px 40px; justify-content: space-between; align-items: center; }
 footer.end p { margin: 0; max-width: 620px; }
 .end-links { display: flex; flex-wrap: wrap; gap: 10px; }
-.end-links a { text-decoration: none; font-weight: 700; font-size: 14.5px; border: 1px solid #4b6a94; border-radius: 8px; padding: 10px 14px; }
-.end-links a:hover { background: #1b3b66; }
+.end-links a { text-decoration: none; font-weight: 700; font-size: 14.5px; color: #fff; border: 1px solid var(--rule-2); border-radius: 8px; padding: 10px 14px; }
+.end-links a:hover { background: var(--panel-2); }
+
+/* Chapter rail */
+#rail { position: fixed; left: 22px; top: 50%; transform: translateY(-50%); z-index: 20; display: flex; flex-direction: column; gap: 4px; opacity: 0; pointer-events: none; transition: opacity .4s ease; }
+#rail.show { opacity: 1; pointer-events: auto; }
+#rail a { display: flex; align-items: center; gap: 10px; text-decoration: none; padding: 5px 0; color: var(--muted); font: 700 12.5px/1 var(--sans); }
+#rail a::before { content: ""; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--rule-2); transition: all .25s ease; flex: none; }
+#rail a span { opacity: 0; transform: translateX(-6px); transition: all .25s ease; white-space: nowrap; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 6px 9px; }
+#rail a:hover span { opacity: 1; transform: none; }
+#rail a.on { color: #fff; }
+#rail a.on::before { background: var(--orange); border-color: var(--orange); transform: scale(1.35); }
+@media (max-width: 1340px) { #rail { display: none; } }
 
 /* Tooltip */
-#tip { position: fixed; z-index: 50; pointer-events: none; background: var(--ink); color: #fff; border-radius: 8px; padding: 9px 12px; font-size: 13px; line-height: 1.45; box-shadow: 0 8px 24px rgba(0,0,0,.22); max-width: 260px; opacity: 0; transition: opacity .1s; }
+#tip { position: fixed; z-index: 50; pointer-events: none; background: #030b17; border: 1px solid var(--rule-2); color: #fff; border-radius: 9px; padding: 10px 12px; font-size: 13px; line-height: 1.45; box-shadow: 0 10px 28px rgba(0, 0, 0, .5); max-width: 270px; opacity: 0; transition: opacity .1s; }
 #tip.on { opacity: 1; }
 #tip .t-head { font-weight: 700; margin-bottom: 3px; color: #cfd8e6; font-size: 12.5px; }
 #tip .t-row { display: flex; justify-content: space-between; gap: 16px; }
@@ -238,231 +314,7 @@ footer.end p { margin: 0; max-width: 620px; }
 #tip .t-row span { color: #cfd8e6; }
 #tip .t-row i { display: inline-block; width: 12px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; }
 
-@media (max-width: 900px) {
-  .kpis { grid-template-columns: repeat(2, 1fr); }
-  .two, .pair, .rec, .map-wrap, .cust { grid-template-columns: 1fr; }
-  .rec-side { border-left: 0; border-top: 1px solid var(--rule); }
-  .waffle { width: 200px; }
-  .bar .btn { display: none; }
-}
-@media (max-width: 640px) {
-  body { font-size: 16.5px; }
-  .cover { padding-top: 44px; }
-  .fig { padding: 18px 14px 12px; border-radius: 10px; }
-  .kinds .row { grid-template-columns: 1fr 1fr; gap: 8px 14px; }
-  .kinds .row .name { grid-column: 1 / -1; }
-  .kinds .row.head { display: none; }
-  .kinds .cell::before { content: attr(data-h); display: block; font-size: 11.5px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
-  .kinds .cell.share { grid-column: 1 / -1; }
-  .tiers .row { grid-template-columns: 1fr; gap: 6px; }
-  .facts { grid-template-columns: 1fr; }
-  .kpi .k-value { font-size: 24px; }
-  section.part { padding-top: 64px; }
-}
-@media print {
-  @page { margin: 14mm; }
-  body { background: #fff; font-size: 11.5pt; }
-  .bar, #tip, .seg, .end-links, details.nums { display: none !important; }
-  .cover { background: #fff; color: var(--ink-2); padding: 0 0 20px; }
-  .cover h1, .byline b, .about b { color: var(--navy); }
-  .cover .dek, .byline, .about, .cover .label { color: var(--ink-2); }
-  .summary { margin-top: 0; }
-  .sheet { box-shadow: none; border: 0; padding: 0; }
-  .fig, .rec, .so-what, .aside, .kpi { break-inside: avoid; }
-  section.part { padding-top: 34px; }
-  footer.end { background: #fff; color: var(--ink-2); margin-top: 30px; padding: 0; }
-  a { color: inherit; text-decoration: none; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .meter .fill, .tile { transition: width .5s ease, background-color .25s ease; }
-}
-
-/* ---------- Second pass: motion, interaction and a lighter read ---------- */
-#progress { position: fixed; top: 0; left: 0; z-index: 30; width: 100%; height: 3px; background: var(--orange); transform-origin: 0 50%; transform: scaleX(0); }
-
-/* Things fade up as they come into view, and their charts animate once they have. */
-.js .anim { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1); }
-.js .anim.in { opacity: 1; transform: none; }
-.grow { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
-.js .anim:not(.in) .grow { transform: scaleY(0); }
-.draw { stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 2s ease; }
-.js .anim:not(.in) .draw { stroke-dashoffset: 1; }
-.pop { transition: opacity .5s ease 1.6s; }
-.js .anim:not(.in) .pop { opacity: 0; }
-.js .anim:not(.in) .meter .fill { width: 0 !important; }
-.meter .fill { transition: width .9s cubic-bezier(.2, .8, .2, 1) .15s; }
-.waffle i.back { transition: background-color .4s ease 1s, transform .4s ease 1s; }
-.js .anim:not(.in) .waffle i.back { background: #dfe3ea; transform: scale(.6); }
-
-/* Cover */
-.cover { padding-bottom: 160px; background: radial-gradient(900px 500px at 85% 10%, #1b4580 0%, transparent 60%), var(--navy); }
-.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 60px); align-items: center; }
-.cover h1 { margin-bottom: 18px; }
-.cover .dek { margin-bottom: 26px; }
-.hero-actions, .play-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.cta { display: inline-block; font: 700 15px/1 var(--sans); color: var(--navy); background: #fff; border: 1px solid #fff; border-radius: 9px; padding: 13px 18px; text-decoration: none; cursor: pointer; transition: transform .15s ease, background-color .15s ease, opacity .15s ease; }
-.cta:hover { transform: translateY(-1px); color: var(--navy); background: #e6effb; }
-.cta.ghost { background: transparent; color: #fff; border-color: #5b7fb3; }
-.cta.ghost:hover { background: rgba(255, 255, 255, .1); color: #fff; }
-.cta[hidden] { display: none; }
-.cta[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
-details.about { margin-top: 26px; border-left: 3px solid #4b79b8; padding: 2px 0 2px 16px; max-width: 620px; }
-details.about summary { cursor: pointer; font-weight: 700; color: #dbe5f3; font-size: 15px; }
-details.about p { margin: 10px 0 0; }
-.hero-fig { margin: 0; }
-.hero-fig figcaption { font-size: 13px; color: #9fb6d6; margin-top: 4px; }
-.summary { margin-top: -110px; }
-
-/* Summary: each finding points at what to do about it */
-.pairs { border-top: 1px solid var(--rule); padding-top: 22px; margin-top: 4px; }
-.pairs-head, .pair-row { display: grid; grid-template-columns: 1fr 34px 1fr; gap: 14px; align-items: center; }
-.pairs-head span { font: 700 13px/1.3 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); padding: 0 16px 6px; }
-.pair-row { text-decoration: none; color: inherit; border-radius: 12px; margin-top: 8px; transition: transform .18s ease; }
-.pair-row > div { background: #f7f6f2; border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; height: 100%; transition: border-color .18s ease, box-shadow .18s ease; }
-.pair-row > div.do { background: var(--blue-wash); border-color: #cfe0f7; }
-.pair-row b { display: block; font-size: 16.5px; line-height: 1.3; color: var(--ink); }
-.pair-row p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
-.pair-row i { font: 700 22px/1 var(--sans); color: var(--blue); text-align: center; font-style: normal; transition: transform .18s ease; }
-.pair-row:hover { color: inherit; }
-.pair-row:hover i { transform: translateX(5px); }
-.pair-row:hover > div.do { border-color: var(--blue); box-shadow: 0 6px 18px -10px rgba(42, 120, 214, .7); }
-
-/* Dark panels hold the parts you can play with */
-.play { background: radial-gradient(700px 380px at 90% 0%, #1b4580 0%, transparent 65%), var(--navy); color: #dbe5f3; border-radius: 18px; padding: clamp(22px, 4vw, 44px); box-shadow: 0 26px 60px -34px rgba(15, 42, 77, .8); }
-.play .label { color: #9fb6d6; }
-.play h2, .play h3 { color: #fff; font: 600 clamp(24px, 3vw, 34px)/1.18 var(--serif); margin: 12px 0 12px; max-width: 800px; }
-.play > p { max-width: 720px; color: #c8d5e8; }
-.play-actions { margin-top: 16px; }
-.play-out { margin: 18px 0 0; font: 400 clamp(17px, 1.8vw, 20px)/1.5 var(--serif); color: #fff; min-height: 1.5em; max-width: 760px; }
-#draw { margin-top: 10px; touch-action: pan-y; }
-#draw .zone { cursor: crosshair; touch-action: none; }
-#draw .actual { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease; }
-
-/* Sellers times sales per seller */
-.eq { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: center; margin-top: 8px; }
-.eq > i { font: 400 34px/1 var(--serif); color: var(--muted); font-style: normal; }
-.eq-tile { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 22px 18px; text-align: center; border-top: 5px solid var(--blue); }
-.eq-tile.down { border-top-color: var(--orange); }
-.eq-tile.total { background: var(--navy); border-color: var(--navy); border-top-color: var(--orange); }
-.eq-tile b { display: block; font: 700 clamp(34px, 5vw, 56px)/1 var(--sans); color: var(--ink); letter-spacing: -.02em; }
-.eq-tile span { display: block; margin-top: 8px; font-size: 15px; color: var(--muted); font-weight: 500; }
-.eq-tile.total b { color: #fff; }
-.eq-tile.total span { color: #b9c9df; }
-.eq-note { font-size: 13.5px; color: var(--muted); margin: 10px 0 22px; text-align: center; }
-
-/* 200 orders as dots */
-.dots { display: flex; flex-wrap: wrap; gap: 22px 30px; align-items: flex-start; margin: 6px 0 4px; }
-.dgroup { cursor: default; }
-.dgroup-head { font-size: 13.5px; line-height: 1.3; color: var(--ink); font-weight: 700; margin-bottom: 8px; }
-.dgroup-head span { display: block; font-weight: 500; color: var(--muted); }
-.dgrid { display: grid; gap: 4px; }
-.dgrid i { width: 13px; height: 13px; border-radius: 50%; background: #c5cad3; transition: background-color .35s ease, transform .35s ease; }
-.dgroup.wrong .dgrid i { background: #8fb4e6; }
-.dots.show-bad .dgrid i.b { background: var(--orange); transform: scale(1.12); }
-.dots.show-bad .dgrid i:not(.b) { background: #e4e6ea; }
-.dots-say { font: 400 clamp(17px, 1.8vw, 19.5px)/1.5 var(--serif); color: var(--ink); margin: 16px 0 4px; min-height: 3em; }
-details.nums .kinds { margin-top: 14px; }
-
-/* Big-number cards */
-.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
-.stat-row.two { grid-template-columns: 1fr 1fr; }
-.stat { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 22px 8px; border-top: 4px solid var(--blue); }
-.stat > b { display: block; font: 700 clamp(30px, 4vw, 44px)/1.05 var(--sans); color: var(--navy); letter-spacing: -.02em; margin-bottom: 10px; white-space: nowrap; }
-.stat p { font-size: 15.5px; line-height: 1.55; }
-.stat-row.nots .stat { border-top-color: var(--grey-mark); padding-top: 16px; }
-
-/* Sliders */
-.levers { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(20px, 4vw, 48px); align-items: center; margin-top: 22px; }
-.lever { padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, .14); }
-.lever:first-child { border-top: 0; }
-.lever-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: #fff; font-weight: 700; font-size: 15.5px; }
-.lever-top output { font: 700 20px/1 var(--sans); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.lever input[type=range] { width: 100%; margin: 12px 0 8px; accent-color: #ff9466; cursor: pointer; }
-.lever-foot { display: flex; justify-content: space-between; gap: 10px; align-items: center; font-size: 13px; color: #9fb6d6; }
-.chip { font: 700 12.5px/1 var(--sans); color: #dbe5f3; background: rgba(255, 255, 255, .08); border: 1px solid #4b6a94; border-radius: 99px; padding: 7px 11px; cursor: pointer; }
-.chip:hover { background: rgba(255, 255, 255, .18); }
-.lever-out { background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .14); border-radius: 14px; padding: 24px; }
-.lever-out .lo-label { font: 700 12px/1.3 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: #9fb6d6; }
-.lever-out .lo-big { font: 700 clamp(44px, 6vw, 68px)/1 var(--sans); color: #fff; letter-spacing: -.02em; margin: 8px 0 6px; font-variant-numeric: tabular-nums; }
-.lever-out .lo-from { font-size: 14.5px; color: #b9c9df; }
-.lo-bar { height: 12px; border-radius: 6px; background: rgba(255, 255, 255, .12); margin: 16px 0; overflow: hidden; }
-.lo-bar i { display: block; height: 100%; border-radius: 6px; background: #ff9466; transition: width .25s ease; }
-.lever-out .lo-say { font: 400 17px/1.5 var(--serif); color: #fff; margin: 0 0 14px; min-height: 4.5em; }
-
-/* Fold-away detail */
-details.acc { border: 1px solid var(--rule); border-radius: 12px; background: var(--card); margin: 14px 0; padding: 0 20px; }
-details.acc summary { cursor: pointer; font: 700 16.5px/1.3 var(--sans); color: var(--ink); padding: 16px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
-details.acc summary::-webkit-details-marker { display: none; }
-details.acc summary::after { content: "+"; font: 400 24px/0.8 var(--sans); color: var(--blue); transition: transform .2s ease; }
-details.acc[open] summary::after { transform: rotate(45deg); }
-details.acc > *:not(summary) { font-size: 16px; }
-details.acc > *:last-child { margin-bottom: 18px; }
-.recs { margin-top: 34px; }
-.rec { transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1), box-shadow .2s ease; }
-.rec:target { box-shadow: 0 0 0 3px var(--blue); }
-.tile { transition: background-color .3s ease, transform .15s ease; }
-.tile:hover { transform: scale(1.08); }
-
-@media (max-width: 900px) {
-  .hero, .levers, .stat-row, .stat-row.two { grid-template-columns: 1fr; }
-  .pairs-head { display: none; }
-  .pair-row { grid-template-columns: 1fr; gap: 4px; margin-top: 16px; }
-  .pair-row i { transform: rotate(90deg); }
-  .pair-row:hover i { transform: rotate(90deg); }
-  .eq { grid-template-columns: 1fr; gap: 6px; }
-  .eq > i { text-align: center; }
-  .eq-tile { padding: 16px; }
-}
-@media (max-width: 640px) {
-  .dgrid i { width: 10px; height: 10px; }
-  .dgrid { gap: 3px; }
-  .dots { gap: 18px 22px; }
-}
-@media print {
-  #progress, .hero-actions, .play-actions, #guess { display: none !important; }
-  .js .anim { opacity: 1 !important; transform: none !important; }
-  .js .anim:not(.in) .grow { transform: none; }
-  .js .anim:not(.in) .draw { stroke-dashoffset: 0; }
-  .js .anim:not(.in) .pop { opacity: 1; }
-  .js .anim:not(.in) .meter .fill { width: auto !important; }
-  details.acc, .stat, .eq-tile { break-inside: avoid; }
-  .play { background: #fff; color: var(--ink-2); box-shadow: none; border: 1px solid var(--rule); }
-  .play h2, .play h3, .lever-top, .lever-out .lo-big, .lever-out .lo-say { color: var(--navy); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .js .anim, .grow, .draw, .pop, .meter .fill, .waffle i.back, #draw .actual { transition: none !important; }
-}
-
-/* ---------- Third pass: a cover that fills the screen, the role switch, the slides ---------- */
-.cover { position: relative; overflow: hidden; display: flex; align-items: center; min-height: min(94vh, 900px);
-  background: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 100% 46px, linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 46px 100%, var(--navy); }
-.cover::before { content: ""; position: absolute; width: 900px; height: 900px; right: -220px; top: -320px; border-radius: 50%; background: radial-gradient(closest-side, rgba(58, 126, 220, .55), transparent); animation: drift 16s ease-in-out infinite alternate; pointer-events: none; }
-.cover::after { content: ""; position: absolute; width: 700px; height: 700px; left: -260px; bottom: -380px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 148, 102, .22), transparent); animation: drift 20s ease-in-out infinite alternate-reverse; pointer-events: none; }
-@keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(-90px, 70px) scale(1.15); } }
-.cover > .wide { position: relative; z-index: 1; width: 100%; }
-.cover h1 { font-size: clamp(46px, 7.4vw, 92px); }
-.hero-read { display: flex; flex-wrap: wrap; gap: 4px 20px; min-height: 1.7em; margin-bottom: 8px; font-size: 13.5px; color: #b9c9df; }
-.hero-read b { color: #fff; font-size: 15.5px; font-variant-numeric: tabular-nums; }
-#hero-chart { cursor: ew-resize; }
-.kpi { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
-.kpi:hover { transform: translateY(-3px); border-color: var(--blue); box-shadow: 0 10px 24px -16px rgba(15, 42, 77, .6); }
-
-.lens { margin: 22px 0 6px; padding: 18px 20px 20px; border-radius: 14px; background: linear-gradient(135deg, #f1f6fd, #fdf3ee); border: 1px solid #dbe6f5; }
-.lens-label { font: 700 15.5px/1.3 var(--sans); color: var(--navy); margin: 0 0 10px; }
-.lens .seg { background: rgba(255, 255, 255, .7); margin-bottom: 14px; }
-.lens .seg button[aria-pressed="true"] { background: var(--navy); color: #fff; }
-.lens-card { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 22px; align-items: center; animation: lensin .45s ease; }
-.lens-card[hidden] { display: none; }
-@keyframes lensin { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.lens-num b { display: block; font: 700 clamp(44px, 6vw, 72px)/1 var(--sans); color: var(--navy); letter-spacing: -.025em; }
-.lens-num span { display: block; margin-top: 8px; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
-.lens-do { background: #fff; border-radius: 12px; padding: 16px 18px; border: 1px solid var(--rule); }
-.lens-do .label { color: #1c5cab; margin-bottom: 6px; }
-.lens-do p { margin: 0 0 8px; color: var(--ink); font-size: 16px; line-height: 1.5; }
-.lens-do a { font-weight: 700; font-size: 14px; text-decoration: none; }
-.pair-row.hot > div.do { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange); }
-.pair-row.hot i { color: var(--orange); }
-
+/* Slides */
 #deck { position: fixed; inset: 0; z-index: 100; color: #fff; cursor: pointer; overflow: hidden; outline: none;
   background: radial-gradient(1100px 700px at 80% 0%, #1f4f93 0%, transparent 60%), radial-gradient(800px 600px at 0% 100%, rgba(255, 148, 102, .25) 0%, transparent 60%), #0b2140; }
 #deck[hidden] { display: none; }
@@ -489,445 +341,496 @@ details.acc > *:last-child { margin-bottom: 18px; }
 .deck-dots button { width: 11px; height: 11px; padding: 0; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .28); }
 .deck-dots button.on { background: #ff9466; transform: scale(1.25); }
 .deck-count { font-size: 14px; color: #9fb6d6; font-variant-numeric: tabular-nums; }
-@media (max-width: 900px) { .lens-card { grid-template-columns: 1fr; gap: 12px; } .cover { min-height: 0; } }
-@media print { #deck { display: none !important; } .cover { min-height: 0; display: block; } .cover::before, .cover::after { display: none; } }
-@media (prefers-reduced-motion: reduce) { .cover::before, .cover::after, .lens-card { animation: none; } .slide { transition: none; } }
+
+@media (max-width: 980px) {
+  .hero, .levers, .map-wrap, .cust, .rec, .pairnum { grid-template-columns: 1fr; }
+  .seat-grid { grid-template-columns: 1fr 1fr; }
+  .nums { grid-template-columns: 1fr; gap: 22px; }
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .eq { grid-template-columns: 1fr; gap: 6px; }
+  .eq > i { text-align: center; }
+  .rec-side { border-left: 0; border-top: 1px solid var(--rule); }
+  .cover { min-height: 0; padding-top: 30px; }
+  .waffle { width: 210px; }
+  .seat-pick span { display: none; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16.5px; }
+  .seat-grid { grid-template-columns: 1fr; }
+  .seat { padding: 16px 16px 40px; }
+  .tiers .row { grid-template-columns: 1fr; gap: 6px; }
+  .facts { grid-template-columns: 1fr; }
+  .dgrid i { width: 10px; height: 10px; }
+  .dgrid { gap: 3px; }
+  .decide li { padding-left: 0; padding-top: 74px; }
+  .decide li::before { top: 16px; width: 44px; height: 44px; line-height: 44px; font-size: 20px; }
+  .bar .btn { display: none; }
+}
+@media print {
+  .bar, #rail, #progress, #tip, #deck, .seats, .next, .play-actions { display: none !important; }
+  .js .anim { opacity: 1 !important; transform: none !important; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .mod { padding: 30px 0; break-inside: avoid; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .anim, .grow, .draw, .pop, .meter .fill, .waffle i.back, #draw .actual, .eq-tile, .eq > i, .slide { transition: none !important; }
+}
 </style>
 </head>
-<body>
+<body data-seat="full">
 <div id="progress" aria-hidden="true"></div>
 
 <header class="bar pad">
   <div class="bar-in">
     <a class="home" href="../../">← Timur Kherlenbayar</a>
-    <nav aria-label="Sections of the report">
-      <a href="#summary">Summary</a>
-      <a href="#guess">Your guess</a>
-      <a href="#growth">1 Growth</a>
-      <a href="#customers">2 Customers</a>
-      <a href="#reviews">3 Bad orders</a>
-      <a href="#delivery">4 Delivery</a>
-      <a href="#sellers">5 Sellers</a>
-      <a href="#actions">6 Recommendations</a>
-      <a href="#scorecard">Scorecards</a>
-      <a href="#notes">Notes</a>
-    </nav>
-    <button class="btn" type="button" data-present>▶ Present</button>
-    <button class="btn" type="button" id="print">Print or save as PDF</button>
+    <label class="seat-pick"><span>Seat</span>
+      <select id="seat-select" aria-label="Choose whose version of the review to read">
+        <option value="ceo">Chief executive</option>
+        <option value="ops">Operations</option>
+        <option value="sellers">Seller growth</option>
+        <option value="cx">Customer experience</option>
+        <option value="full" selected>Full analysis</option>
+      </select>
+    </label>
+    <button class="btn" type="button" data-present>Slides</button>
   </div>
 </header>
+<nav id="rail" aria-label="Chapters"></nav>
 
 <main>
   <div class="cover pad">
-    <div class="wide hero">
-      <div>
-        <p class="label">A business review · Olist marketplace, Brazil · 2017 to 2018</p>
-        <h1>More sellers, same sales</h1>
-        <p class="dek">A marketplace kept signing up sellers and stopped growing anyway. This is the review I would hand its leadership team: what happened, why, and what to do before Black Friday.</p>
-        <div class="hero-actions">
-          <a class="cta" href="#summary">The 60-second version ↓</a>
-          <a class="cta ghost" href="#guess">Test your instinct first</a>
-          <button class="cta ghost" type="button" data-present>▶ Present it as slides</button>
+    <div class="wide">
+      <div class="hero">
+        <div>
+          <p class="label">A business review · Olist marketplace, Brazil · 2017 to 2018</p>
+          <h1>More sellers, same sales</h1>
+          <p class="dek">A marketplace kept signing up sellers and stopped growing anyway. I wrote up what happened four ways, one for each person who has to act on it.</p>
         </div>
-        <details class="about">
-          <summary>What is this, and whose data is it?</summary>
-          <p>Olist is a Brazilian company that lets small merchants sell on the country’s large shopping sites through one shared storefront, and it arranges the delivery. In 2018 it published the records of about 100,000 of its orders. I wrote this the way I would for its leadership team at the start of September 2018, which is where the data ends. I have never worked for Olist, so everything here comes from that public file, and the <a href="#notes">notes at the end</a> say what it cannot tell us. Amounts are in Brazilian reais, and one real was worth about 27 US cents in 2018.</p>
-        </details>
+        <figure class="hero-fig anim">
+          <div class="hero-read" id="hero-read" aria-hidden="true"></div>
+          <div class="chart" id="hero-chart" role="img" aria-label="Two lines from January 2017 to August 2018. The number of active sellers rises the whole way to 1,266. Monthly sales rise with it until November 2017 and then flatten and dip."></div>
+        </figure>
       </div>
-      <figure class="hero-fig anim">
-        <div class="hero-read" id="hero-read" aria-hidden="true"></div>
-        <div class="chart" id="hero-chart" role="img" aria-label="Two lines from January 2017 to August 2018. The number of active sellers rises the whole way to 1,266. Monthly sales rise with it until November 2017 and then flatten and dip."></div>
-        <figcaption>Move across the chart to travel through the twenty months. Both lines are set to the same height in November 2017, the month sales peaked.</figcaption>
-      </figure>
+      <div class="seats anim" id="seats">
+        <p class="seats-label">Pick your seat at the table</p>
+        <div class="seat-grid">
+          <button type="button" class="seat" data-pick="ceo"><b>Chief executive</b><span>Is the business healthy, and where should next year’s money go?</span><i aria-hidden="true">→</i></button>
+          <button type="button" class="seat" data-pick="ops"><b>Operations</b><span>Will Black Friday break delivery again, and where?</span><i aria-hidden="true">→</i></button>
+          <button type="button" class="seat" data-pick="sellers"><b>Seller growth</b><span>Are we signing the right sellers, and are we keeping them?</span><i aria-hidden="true">→</i></button>
+          <button type="button" class="seat" data-pick="cx"><b>Customer experience</b><span>Why are customers unhappy, and what can I fix?</span><i aria-hidden="true">→</i></button>
+        </div>
+        <button type="button" class="seat-all" data-pick="full">Or read the full analysis →</button>
+      </div>
     </div>
   </div>
 
-  <!-- Executive summary -->
-  <section class="summary pad" id="summary" aria-labelledby="sum-title">
-    <div class="wide sheet anim">
-      <p class="label">The 60-second version</p>
-      <h2 id="sum-title">Running better than ever, and selling less than in spring.</h2>
-      <p class="lead">Orders now arrive in 7 days and only 3.6% come late, the best figures on record. Yet monthly sales are 13% lower than in the spring, and signing up more sellers has stopped helping, because each seller now sells about a quarter less.</p>
-
-
-      <div class="lens" id="lens">
-        <p class="lens-label">Short on time? Pick your seat at the table.</p>
-        <div class="seg" role="group" aria-label="Choose whose summary to read">
-          <button type="button" data-role="ceo" aria-pressed="true">Chief executive</button>
-          <button type="button" data-role="ops" aria-pressed="false">Operations</button>
-          <button type="button" data-role="sellers" aria-pressed="false">Seller growth</button>
-          <button type="button" data-role="cx" aria-pressed="false">Customer experience</button>
-        </div>
-        <div class="lens-card" data-for="ceo" data-hot="#rec-2 #rec-3">
-          <div class="lens-num"><b>−13%</b><span>monthly sales against the spring, with 27% more sellers than at the start of the year</span></div>
-          <div class="lens-do"><p class="label">Your decision</p><p>Stop measuring growth by the number of sellers signed, and ask for the study of where the buyers went before you approve next year’s plan.</p><a href="#growth">See the evidence →</a></div>
-        </div>
-        <div class="lens-card" data-for="ops" data-hot="#rec-1" hidden>
-          <div class="lens-num"><b>30%</b><span>of parcels to Rio de Janeiro arrived late during the four bad months</span></div>
-          <div class="lens-do"><p class="label">Your decision</p><p>Agree a longer delivery promise for the peak weeks and extra carrier space this month. Black Friday is twelve weeks away.</p><a href="#delivery">See the evidence →</a></div>
-        </div>
-        <div class="lens-card" data-for="sellers" data-hot="#rec-2" hidden>
-          <div class="lens-num"><b>35%</b><span>of new sellers have stopped selling by their fourth month</span></div>
-          <div class="lens-do"><p class="label">Your decision</p><p>Aim your team at new sellers who reach four orders in thirty days, and give the top 155 sellers a named person to call.</p><a href="#sellers">See the evidence →</a></div>
-        </div>
-        <div class="lens-card" data-for="cx" data-hot="#rec-4" hidden>
-          <div class="lens-num"><b>53%</b><span>of complaints on multi-item orders say that only part of the order came</span></div>
-          <div class="lens-do"><p class="label">Your decision</p><p>Ask for the rating only after the last parcel has arrived, and hold it back whenever an order is running late.</p><a href="#reviews">See the evidence →</a></div>
-        </div>
+  <!-- The opening for each seat -->
+  <div id="brief" class="pad">
+    <section class="brief" data-seat="ceo">
+      <p class="kicker anim">For the chief executive</p>
+      <h2 class="anim">The business runs better than ever, and it stopped growing nine months ago.</h2>
+      <p class="lede anim">Signing up sellers used to grow sales, and it no longer does. Six short chapters show why, and three decisions follow.</p>
+      <div class="nums anim">
+        <div><b class="count">−13%</b><span>monthly sales against the spring</span></div>
+        <div><b class="count">+27%</b><span>more active sellers than in the first quarter</span></div>
+        <div><b class="count">26%</b><span>of all sales come from 31 sellers</span></div>
       </div>
+    </section>
+    <section class="brief" data-seat="ops">
+      <p class="kicker anim">For the head of operations</p>
+      <h2 class="anim">Delivery has never been faster. A few bad weeks set your record, and the next ones are twelve weeks away.</h2>
+      <p class="lede anim">Seven short chapters show where and when deliveries fail, and three decisions follow.</p>
+      <div class="nums anim">
+        <div><b class="count">7 days</b><span>for a typical delivery, down from 13 at the start of the year</span></div>
+        <div><b class="count">3.6%</b><span>of orders arrived late over the last three months</span></div>
+        <div><b class="count">30%</b><span>of parcels to Rio de Janeiro were late in the four bad months</span></div>
+      </div>
+    </section>
+    <section class="brief" data-seat="sellers">
+      <p class="kicker anim">For the head of seller growth</p>
+      <h2 class="anim">Your team keeps adding sellers. Each one now sells a quarter less, and a third are gone by month four.</h2>
+      <p class="lede anim">Five short chapters show what happens to sellers after they sign, and three decisions follow.</p>
+      <div class="nums anim">
+        <div><b class="count">+27%</b><span>more active sellers than in the first quarter</span></div>
+        <div><b class="count">−26%</b><span>sales for each seller over the same months</span></div>
+        <div><b class="count">35%</b><span>of new sellers have stopped selling by their fourth month</span></div>
+      </div>
+    </section>
+    <section class="brief" data-seat="cx">
+      <p class="kicker anim">For the head of customer experience</p>
+      <h2 class="anim">One order in seven ends in a bad review, and the cheapest fixes are in how and when you ask.</h2>
+      <p class="lede anim">Seven short chapters show where the bad reviews come from, and three decisions follow. A bad review here means one or two stars out of five.</p>
+      <div class="nums anim">
+        <div><b class="count">14.6%</b><span>of rated orders received one or two stars</span></div>
+        <div><b class="count">53%</b><span>of complaints on multi-item orders say part of it never came</span></div>
+        <div><b class="count">74%</b><span>of late customers were asked to rate before the parcel arrived</span></div>
+      </div>
+    </section>
+    <section class="brief" data-seat="full">
+      <p class="kicker anim">The full analysis</p>
+      <h2 class="anim">Running better than ever, and selling less than in spring.</h2>
+      <p class="lede anim">Orders now arrive in 7 days and only 3.6% come late, the best figures on record. Yet monthly sales are 13% lower than in the spring, and signing up more sellers has stopped helping, because each seller now sells about a quarter less.</p>
+      <div class="kpis anim" id="kpis"></div>
+      <p class="fig-note">Averages for June to August 2018. The arrows compare with the three months before and with a year earlier. A “bad review” is one or two stars out of five.</p>
+    </section>
+  </div>
 
-      <div class="kpis" id="kpis"></div>
-      <p class="kpi-note">Averages for June to August 2018. The arrows compare with the three months before and with a year earlier. A “bad review” is one or two stars out of five.</p>
+  <!-- Chapters. Each seat sees its own selection, in its own order. -->
+  <div id="story" class="pad">
 
-      <div class="pairs">
-        <div class="pairs-head"><span>What I found</span><span></span><span>What I would do</span></div>
-        <a class="pair-row" href="#rec-1">
-          <div><b>Good service breaks in a few bad weeks.</b><p>Four months out of twenty produced 55% of all late deliveries. In those months 30% of parcels to Rio de Janeiro came late.</p></div>
-          <i aria-hidden="true">→</i>
-          <div class="do"><b>Prepare for Black Friday now.</b><p>Promise longer delivery to Rio and the Northeast in the peak weeks, and book extra carrier space.</p></div>
-        </a>
-        <a class="pair-row" href="#rec-2">
-          <div><b>More sellers no longer means more sales.</b><p>There are 27% more sellers than in the first quarter, and 6% less in sales.</p></div>
-          <i aria-hidden="true">→</i>
-          <div class="do"><b>Count the sellers who sell.</b><p>Reward the team for new sellers who reach four orders in their first month, and not for sign-ups.</p></div>
-        </a>
-        <a class="pair-row" href="#rec-3">
-          <div><b>The sellers Olist already has are selling less.</b><p>The same 1,238 sellers sold 15% less in summer than in spring.</p></div>
-          <i aria-hidden="true">→</i>
-          <div class="do"><b>Find out where the buyers went.</b><p>The order records cannot say why. Visits and prices on each shopping site can.</p></div>
-        </a>
-        <a class="pair-row" href="#rec-4">
-          <div><b>One order in seven ends in a bad review.</b><p>Orders with several items are 9% of orders and 15% of the bad reviews.</p></div>
-          <i aria-hidden="true">→</i>
-          <div class="do"><b>Fix orders with more than one item.</b><p>Half of those complaints say that only part of the order came.</p></div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Guess -->
-  <section class="part pad" id="guess" aria-labelledby="guess-title">
-    <div class="wide play anim">
-      <p class="label">Before the evidence, a quick test</p>
-      <h2 id="guess-title">Olist kept adding sellers all through 2018. Draw what you think sales did.</h2>
-      <p>Sales more than tripled during 2017, and about 158 new sellers made their first sale in every month of 2018. Drag across the shaded area to finish the line.</p>
-      <div class="chart" id="draw" aria-label="A chart of monthly sales in 2017 with an empty area for 2018 where you can draw your guess."></div>
-      <div class="play-actions">
-        <button class="cta" type="button" id="draw-show" disabled>Show me what happened</button>
-        <button class="cta ghost" type="button" id="draw-skip">Skip, just show me</button>
-        <button class="cta ghost" type="button" id="draw-again" hidden>Draw again</button>
-      </div>
-      <p class="play-out" id="draw-out" role="status" aria-live="polite"></p>
-    </div>
-  </section>
-
-  <!-- 1 Growth -->
-  <section class="part pad" id="growth" aria-labelledby="growth-title">
-    <div class="col part-head">
-      <p class="label"><span>1</span>Growth</p>
-      <h2 id="growth-title">Sales peaked in November 2017 and never got back there.</h2>
-    </div>
-    <div class="col">
-      <p>Sales went from R$244 thousand a month in early 2017 to R$1.0 million in November, with the help of Black Friday. This year they held near R$950 thousand a month until May and then slipped to R$863 thousand over the summer.</p>
-      <h3>Sales are the number of sellers multiplied by what each one sells. One went up and the other went down.</h3>
-    </div>
-    <div class="wide eq anim" aria-label="Sellers up 27%, times sales per seller down 26%, equals sales down 6%.">
-      <div class="eq-tile up"><b class="count">+27%</b><span>active sellers</span></div>
-      <i aria-hidden="true">×</i>
-      <div class="eq-tile down"><b class="count">−26%</b><span>sales per seller</span></div>
-      <i aria-hidden="true">=</i>
-      <div class="eq-tile down total"><b class="count">−6%</b><span>monthly sales</span></div>
-    </div>
-    <div class="col">
-      <p class="eq-note">January to March 2018 compared with June to August 2018.</p>
-      <p>New sellers starting small is not the explanation. The 1,238 sellers who sold in both spring and summer sold 15% less. Newcomers more than replaced the sellers who left, but they could not cover that drop as well.</p>
-    </div>
-    <figure class="fig col anim">
-      <figcaption><b>New sellers replaced the ones who left. The loss came from the sellers who stayed.</b><span>Change in average monthly sales between January to May and June to August 2018</span></figcaption>
-      <div class="chart" id="c-bridge" role="img" aria-label="Bar chart of the change in monthly sales. Sellers who stopped: minus 89 thousand reais. Sellers active in both periods: minus 128 thousand. New sellers: plus 130 thousand. Net change: minus 87 thousand."></div>
-      <details class="nums"><summary>Show every month’s numbers</summary><div class="scroll" id="t-monthly"></div></details>
-    </figure>
-    <div class="col">
-      <div class="so-what anim">
-        <p class="label">What this means</p>
-        <p>When the same sellers with the same products sell 15% less, fewer shoppers are finding them or buying from them. Adding sellers then only splits the same demand more ways.</p>
-        <p>The order records begin at the moment of purchase, so they cannot say why demand fell. Part of it may be the season, with a truckers’ strike in May and a World Cup in June and July. Finding out is my third recommendation.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2 Customers -->
-  <section class="part pad" id="customers" aria-labelledby="cust-title">
-    <div class="col part-head">
-      <p class="label"><span>2</span>Customers</p>
-      <h2 id="cust-title">Nearly every order comes from a first-time buyer.</h2>
-    </div>
-    <div class="col">
-      <p>97% of customers bought exactly once, and even a perfect first order barely changes that.</p>
-    </div>
-    <figure class="fig col anim">
-      <figcaption><b>Of every hundred customers, about 4 come back</b><span>Customers whose first order was delivered before March 2018</span></figcaption>
-      <div class="cust">
-        <div class="waffle" id="waffle" role="img" aria-label="A grid of one hundred squares with 4 of them coloured, standing for the customers who ordered again."></div>
-        <dl class="facts">
-          <div><dt>4.3%</dt><dd>came back after a five-star first order</dd></div>
-          <div><dt>3.8%</dt><dd>came back after a one- or two-star first order</dd></div>
-          <div><dt>4.1%</dt><dd>came back after an on-time first order</dd></div>
-          <div><dt>3.2%</dt><dd>came back after a late first order</dd></div>
-        </dl>
-      </div>
-    </figure>
-    <div class="col">
-      <div class="so-what anim">
-        <p class="label">What this means</p>
-        <p>A loyalty programme would buy very little here. Shoppers buy on the big shopping sites and may never learn that Olist was involved. So the business has to win almost every order from scratch, and the reputation of its shared storefront is what it most needs to protect.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3 Bad orders -->
-  <section class="part pad" id="reviews" aria-labelledby="rev-title">
-    <div class="col part-head">
-      <p class="label"><span>3</span>Bad orders</p>
-      <h2 id="rev-title">One order in seven ends in a bad review, and most of them trace to a few kinds of order.</h2>
-    </div>
-    <div class="col">
-      <p>An ordinary order, meaning one item that arrives on time, gets a bad review 7.5% of the time. Orders that go wrong get them far more often.</p>
-    </div>
-    <figure class="fig wide anim" id="dots-fig">
-      <figcaption><b>Picture 200 orders</b><span>Each dot stands for one order in every 200. Point at a group for its exact figures.</span></figcaption>
-      <div class="seg" id="dots-seg" role="group" aria-label="What the dots show">
-        <button type="button" aria-pressed="true">How the 200 orders went</button>
-        <button type="button" aria-pressed="false">Who left a bad review?</button>
-      </div>
-      <div class="dots" id="dots"></div>
-      <p class="dots-say" id="dots-say" role="status" aria-live="polite"></p>
-      <details class="nums"><summary>Show the exact figures</summary>
-        <div class="kinds" id="kinds"></div>
-        <p class="fig-note">All 98,330 rated orders, each counted once in the first row that describes it. If the four kinds at the top had been rated like ordinary orders, there would have been about 7,000 fewer bad reviews, which is 49% of the total.</p>
-      </details>
-    </figure>
-    <div class="wide stat-row two anim">
-      <div class="stat">
-        <b>3.7% → 1.9%</b>
-        <p><strong>Orders that never arrive are getting rarer.</strong> Customers paid R$570 thousand for 2,889 orders that never reached them, but the share has halved since 2017. It needs watching and not a new project.</p>
-      </div>
-      <div class="stat">
-        <b class="count">53%</b>
-        <p><strong>of complaints on multi-item orders say only part of it came.</strong> On single-item orders it is 9%. The order is marked as delivered when the first parcel lands, and the customer rates all of it while half is still missing.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 Delivery -->
-  <section class="part pad" id="delivery" aria-labelledby="del-title">
-    <div class="col part-head">
-      <p class="label"><span>4</span>Delivery</p>
-      <h2 id="del-title">Delivery is faster than ever. A few bad weeks do the damage, and Black Friday is twelve weeks away.</h2>
-    </div>
-    <div class="col">
-      <p>A typical order now takes 7 days, down from 13 at the start of the year. Lateness comes in bursts. Four months held 27% of the orders and 55% of the late deliveries, and Rio de Janeiro took the worst of it.</p>
-    </div>
-    <figure class="fig wide anim">
-      <figcaption><b>Late deliveries arrive in bursts, and Rio de Janeiro is hit hardest</b><span>Share of orders that arrived after the promised date, by the month they were placed</span></figcaption>
-      <div class="legend"><span><i class="line" style="background:var(--orange)"></i>Orders sent to Rio de Janeiro state</span><span><i class="line" style="background:var(--blue)"></i>Orders sent everywhere else</span></div>
-      <div class="chart" id="c-late" role="img" aria-label="Line chart of the share of orders delivered late each month, for Rio de Janeiro and for the rest of Brazil. Both lines are low in most months and spike in November and December 2017 and in February and March 2018, when about a third of the parcels sent to Rio arrived late."></div>
-      <p class="fig-note">November is Black Friday. February and March coincided with a <a href="https://agenciabrasil.ebc.com.br/geral/noticia/2018-03/saiba-o-que-fazer-para-ficar-com-contas-em-dia-durante-greve-dos-correios" target="_blank" rel="noopener noreferrer">national postal strike</a> and, in Rio, a wave of cargo theft that led the post office to <a href="https://setcesp.org.br/noticias/por-violencia-correios-vao-cobrar-taxa-extra-para-fazer-entregas-no-rio/" target="_blank" rel="noopener noreferrer">add an emergency charge</a>. The records do not name the carrier, so this is context and not proof.</p>
-    </figure>
-
-    <div class="col">
-      <h3>Customers forgive slow. They do not forgive late.</h3>
-      <p>Olist promises a delivery date at checkout, on average 24 days out, and usually beats it. The rating follows that promise far more than it follows speed. An order that takes three to four weeks and still arrives when promised averages 4.0 stars.</p>
-    </div>
-    <figure class="fig col anim">
-      <figcaption><b>The rating falls off a cliff at the promised date</b><span>Average stars out of five, by how many days before or after the promised date the order arrived</span></figcaption>
-      <div class="legend"><span><i style="background:var(--blue)"></i>Arrived by the promised date</span><span><i style="background:var(--orange)"></i>Arrived after it</span></div>
-      <div class="chart" id="c-gap" role="img" aria-label="Column chart of the average rating by arrival time. Orders that arrive early or on the promised date average between 4.1 and 4.3 stars. Orders one to three days late average 3.3, four to seven days late 2.1, and more than a week late 1.7."></div>
-    </figure>
-
-    <div class="wide stat-row anim">
-      <div class="stat">
-        <b class="count">74%</b>
-        <p><strong>of late customers were asked for a rating before the parcel arrived.</strong> Among orders one to three days late, people asked while still waiting gave 2.4 stars, and people asked afterwards gave 3.5.</p>
-      </div>
-      <div class="stat">
-        <b class="count">72%</b>
-        <p><strong>of late parcels left the seller on time.</strong> The days were lost with the carrier, where a late parcel spent a typical 26 days against 7 for one that arrived on time.</p>
-      </div>
-      <div class="stat">
-        <b class="count">81</b>
-        <p><strong>sellers cause half of all missed shipping deadlines.</strong> That is 3% of the sellers who ship anything, so a short list of calls would cover most of the problem.</p>
-      </div>
-    </div>
-
-    <figure class="fig wide anim">
-      <figcaption><b>How delivery differs across Brazil</b><span>Each square is a state, placed roughly where it sits on the map. Choose what to compare, and point at a state for its details.</span></figcaption>
-      <div class="seg" id="map-seg" role="group" aria-label="Measure shown on the map"></div>
-      <div class="map-wrap">
-        <div>
-          <div class="tiles" id="tiles"></div>
-          <div class="ramp"><span id="ramp-lo"></span><i></i><span id="ramp-hi"></span></div>
-          <p class="fig-note">The far northern states receive very few orders, so their figures rest on small numbers.</p>
-        </div>
-        <div class="map-side">
-          <ul>
-            <li><b>São Paulo is the home market.</b> It receives 42% of orders, and 71% of all orders ship from sellers based there.</li>
-            <li><b>The Northeast waits longest and pays most.</b> A typical order takes 17 days against 7 in São Paulo, and delivery adds 22% to the price against 14%.</li>
-            <li><b>One route matters most.</b> São Paulo sellers to Rio customers is 8% of orders, and 14% of them arrived late.</li>
-          </ul>
+    <section class="mod" id="m-guess" data-seats="ceo full" data-rail="Your guess">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>A quick test</p>
+        <h2 class="anim">Olist kept adding sellers all through 2018. Draw what you think sales did.</h2>
+        <p class="lede anim">Sales more than tripled during 2017, and about 158 new sellers made their first sale in every month of 2018. Drag across the shaded area to finish the line.</p>
+        <div class="vis anim">
+          <div class="chart" id="draw" aria-label="A chart of monthly sales in 2017 with an empty area for 2018 where you can draw your guess."></div>
+          <div class="play-actions">
+            <button class="cta" type="button" id="draw-show" disabled>Show me what happened</button>
+            <button class="cta ghost" type="button" id="draw-skip">Skip, just show me</button>
+            <button class="cta ghost" type="button" id="draw-again" hidden>Draw again</button>
+          </div>
+          <p class="play-out" id="draw-out" role="status" aria-live="polite"></p>
         </div>
       </div>
-    </figure>
+    </section>
 
-    <div class="col">
-      <details class="acc">
-        <summary>Something I tested and dropped</summary>
-        <p>I checked whether a simple rule could set a better promised date, by promising each state the time within which 95% of its deliveries had arrived over the previous four weeks. Across the whole period the rule made 6.8% of orders late against the 7.0% that really were, and it only managed that by promising 2 more days. The promise Olist already makes is about as good as recent history allows, because the bad weeks give no warning. That is why I recommend planning for the peaks we know are coming, and not a new formula.</p>
-      </details>
-    </div>
-  </section>
+    <section class="mod" id="m-stall" data-seats="ceo sellers full" data-rail="Sellers and sales">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Growth</p>
+        <h2 class="anim">More sellers stopped meaning more sales.</h2>
+        <p class="lede anim">Sales are the number of sellers multiplied by what each one sells. Between the first three months of 2018 and the summer, one went up and the other went down.</p>
+        <div class="vis eq anim" aria-label="Sellers up 27%, times sales per seller down 26%, equals sales down 6%.">
+          <div class="eq-tile up"><b class="count">+27%</b><span>active sellers</span></div>
+          <i aria-hidden="true">×</i>
+          <div class="eq-tile down"><b class="count">−26%</b><span>sales per seller</span></div>
+          <i aria-hidden="true">=</i>
+          <div class="eq-tile down total"><b class="count">−6%</b><span>monthly sales</span></div>
+        </div>
+        <p class="for anim" data-seat="ceo"><b>For you</b>The number of sellers is what this company has been steering by, and it has stopped predicting sales. Sales peaked at R$1.0 million last November, and no month since has matched it.</p>
+        <p class="for anim" data-seat="sellers"><b>For you</b>Your team is hitting its target and the business is not growing. The target is measuring the wrong thing.</p>
+        <p class="for anim" data-seat="full"><b>What this means</b>Sales peaked at R$1.0 million last November, and no month since has matched it. Signing up sellers is no longer what grows this business.</p>
+      </div>
+    </section>
 
-  <!-- 5 Sellers -->
-  <section class="part pad" id="sellers" aria-labelledby="sel-title">
-    <div class="col part-head">
-      <p class="label"><span>5</span>Sellers</p>
-      <h2 id="sel-title">A few dozen sellers carry the business, and one new seller in three fades within months.</h2>
-    </div>
-    <div class="col">
-      <p>Olist is paid by its sellers, so they are its real customers. Of 3,029 sellers, the top 31 bring in 26% of sales, and the smaller half bring in 3%.</p>
-    </div>
-    <figure class="fig col anim">
-      <figcaption><b>155 sellers bring in more than half of all sales</b><span>Sellers ranked by their total sales and split into five groups</span></figcaption>
-      <div class="legend"><span><i style="background:var(--grey-mark)"></i>Share of sellers</span><span><i style="background:var(--blue)"></i>Share of sales</span></div>
-      <div class="tiers" id="tiers"></div>
-    </figure>
-    <div class="col">
-      <p>Many sellers do not last. 35% of new sellers made no sale at all in their fourth to sixth months. A seller’s first month is the best early sign of who will stay.</p>
-    </div>
-    <figure class="fig col anim">
-      <figcaption><b>Sellers with a busy first month are far more likely to stay</b><span>Share of new sellers still selling in months four to six, by the number of orders in their first thirty days</span></figcaption>
-      <div class="chart" id="c-trac" role="img" aria-label="Column chart. Of sellers with one order in their first thirty days, 47 percent were still selling in months four to six. With two or three orders, 68 percent. With four to nine, 85 percent. With ten or more, 94 percent."></div>
-    </figure>
-    <div class="col">
-      <div class="so-what anim">
-        <p class="label">What this means</p>
-        <p>This is a pattern and not proof, because good products win early orders and also last longer. It is still the earliest signal there is, and it gives the team that looks after sellers a clear target. I would test it on one month’s new sellers before changing anyone’s goals.</p>
+    <section class="mod" id="m-bridge" data-seats="ceo sellers full" data-rail="Who lost the sales">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Growth</p>
+        <h2 class="anim">The loss came from the sellers who stayed.</h2>
+        <p class="lede anim">New sellers more than replaced the ones who left. But the 1,238 sellers who sold in both spring and summer sold 15% less.</p>
+        <div class="vis anim">
+          <p class="vis-title">Change in average monthly sales, January to May against June to August 2018</p>
+          <div class="chart" id="c-bridge" role="img" aria-label="Bar chart of the change in monthly sales. Sellers who stopped: minus 89 thousand reais. Sellers active in both periods: minus 128 thousand. New sellers: plus 130 thousand. Net change: minus 87 thousand."></div>
+        </div>
+        <p class="for anim" data-seat="ceo"><b>For you</b>When the same sellers with the same products sell less, fewer shoppers are finding them or buying from them. The order records cannot say why, because they begin at the moment of purchase. Finding out is the one study I would ask you to pay for.</p>
+        <p class="for anim" data-seat="sellers"><b>For you</b>This is not a recruiting problem, so recruiting cannot fix it. Sales fell most in computer accessories, by 45%, and in sports and leisure, by 33%. That is where I would start asking sellers what changed.</p>
+        <p class="for anim" data-seat="full"><b>What this means</b>Fewer shoppers are finding these sellers or buying from them, and adding sellers only splits the same demand more ways. The order records cannot say why. Part of it may be the season, with a truckers’ strike in May and a World Cup in June and July.</p>
+      </div>
+    </section>
+
+    <section class="mod" id="m-customers" data-seats="ceo cx full" data-rail="Repeat buyers">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Customers</p>
+        <h2 class="anim">Nearly every order comes from a first-time buyer.</h2>
+        <p class="lede anim">97% of customers bought exactly once, and even a perfect first order barely changes that. Of every hundred customers, about 4 come back.</p>
+        <div class="vis anim">
+          <div class="cust">
+            <div class="waffle" id="waffle" role="img" aria-label="A grid of one hundred squares with 4 of them coloured, standing for the customers who ordered again."></div>
+            <dl class="facts">
+              <div><dt>4.3%</dt><dd>came back after a five-star first order</dd></div>
+              <div><dt>3.8%</dt><dd>came back after a one- or two-star first order</dd></div>
+              <div><dt>4.1%</dt><dd>came back after an on-time first order</dd></div>
+              <div><dt>3.2%</dt><dd>came back after a late first order</dd></div>
+            </dl>
+          </div>
+        </div>
+        <p class="for anim" data-seat="ceo"><b>For you</b>A loyalty programme would buy very little here. Shoppers buy on the big shopping sites and may never learn that Olist was involved, so growth has to come from winning new orders.</p>
+        <p class="for anim" data-seat="cx"><b>For you</b>You cannot win these customers back later, so the first order is the only chance. What you are really protecting is the rating of the shared storefront, which every future shopper sees.</p>
+        <p class="for anim" data-seat="full"><b>What this means</b>A loyalty programme would buy very little. The business has to win almost every order from scratch, so the reputation of its shared storefront is what it most needs to protect.</p>
+      </div>
+    </section>
+
+    <section class="mod widevis" id="m-dots" data-seats="cx full" data-rail="Where bad reviews come from">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Reviews</p>
+        <h2 class="anim">One order in seven ends in a bad review, and a few kinds of order produce most of them.</h2>
+        <p class="lede anim">Picture 200 orders. An ordinary one, a single item that arrives on time, gets a bad review 7.5% of the time.</p>
+        <div class="vis anim" id="dots-fig">
+          <div class="seg" id="dots-seg" role="group" aria-label="What the dots show">
+            <button type="button" aria-pressed="true">How the 200 orders went</button>
+            <button type="button" aria-pressed="false">Who left a bad review?</button>
+          </div>
+          <div class="dots" id="dots"></div>
+          <p class="dots-say" id="dots-say" role="status" aria-live="polite"></p>
+        </div>
+        <p class="for anim" data-seat="cx"><b>For you</b>Four kinds of order are 18% of the total and 58% of your bad reviews. That is where the work is, and the next chapters take them in turn.</p>
+        <p class="for anim" data-seat="full"><b>What this means</b>Four kinds of order are 18% of the total and 58% of the bad reviews. If they had been rated like ordinary orders, there would have been about 7,000 fewer bad reviews.</p>
+      </div>
+    </section>
+
+    <section class="mod" id="m-never" data-seats="ops full" data-rail="Orders that never arrive">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Delivery</p>
+        <h2 class="anim">Orders that never arrive are getting rarer.</h2>
+        <div class="vis bignum anim"><b>3.7% → 1.9%</b><span>of orders never reached the customer, in 2017 and in the last three months</span></div>
+        <p class="lede anim">Customers paid R$570 thousand for 2,889 orders that never came. The share has halved, mostly because sales of out-of-stock items fell from 1.0% of orders to 0.2%.</p>
+        <p class="for anim" data-seat="ops full"><b>For you</b>This is already going the right way. Keep it on the monthly numbers and spend the effort elsewhere.</p>
+      </div>
+    </section>
+
+    <section class="mod" id="m-multi" data-seats="cx full" data-rail="Orders in pieces">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Reviews</p>
+        <h2 class="anim">Orders with several items are rated before all of it has come.</h2>
+        <div class="vis bignum anim"><b class="count">53%</b><span>of the complaints on multi-item orders say that only part of the order arrived. On single-item orders it is 9%.</span></div>
+        <p class="lede anim">The order is marked as delivered when the first parcel lands, and the customer is asked for one rating while half of it is still missing.</p>
+        <p class="for anim" data-seat="cx full"><b>For you</b>These are 9% of orders and 15% of bad reviews. Track each parcel, show the customer a date for each one, and ask for the rating after the last.</p>
+      </div>
+    </section>
+
+    <section class="mod widevis" id="m-late" data-seats="ceo ops cx full" data-rail="Late deliveries">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Delivery</p>
+        <h2 class="anim">Late deliveries come in bursts, and Rio de Janeiro is hit hardest.</h2>
+        <p class="lede anim">Four months out of twenty held 27% of the orders and 55% of the late deliveries. In those months 30% of parcels to Rio came late.</p>
+        <div class="vis anim">
+          <div class="legend"><span><i class="line" style="background:var(--orange)"></i>Orders sent to Rio de Janeiro state</span><span><i class="line" style="background:var(--blue)"></i>Orders sent everywhere else</span></div>
+          <div class="chart" id="c-late" role="img" aria-label="Line chart of the share of orders delivered late each month, for Rio de Janeiro and for the rest of Brazil. Both lines are low in most months and spike in November and December 2017 and in February and March 2018, when about a third of the parcels sent to Rio arrived late."></div>
+          <p class="fig-note">Share of orders that arrived after the promised date, by the month they were placed. February and March coincided with a <a href="https://agenciabrasil.ebc.com.br/geral/noticia/2018-03/saiba-o-que-fazer-para-ficar-com-contas-em-dia-durante-greve-dos-correios" target="_blank" rel="noopener noreferrer">national postal strike</a> and, in Rio, a wave of cargo theft that led the post office to <a href="https://setcesp.org.br/noticias/por-violencia-correios-vao-cobrar-taxa-extra-para-fazer-entregas-no-rio/" target="_blank" rel="noopener noreferrer">add an emergency charge</a>. The records do not name the carrier, so this is context and not proof.</p>
+        </div>
+        <p class="for anim" data-seat="ceo"><b>For you</b>Operations are the best they have ever been, with a typical order arriving in 7 days. This is the one risk with a date on it. Black Friday is twelve weeks away, and last year it started the worst stretch on record.</p>
+        <p class="for anim" data-seat="ops"><b>For you</b>In an ordinary month 4.2% of your orders are late. The peaks are what set your record, and this year you know when the first one starts.</p>
+        <p class="for anim" data-seat="cx"><b>For you</b>A late order is rated 2.3 stars on average, against 4.4 for an ordinary one. Your worst weeks for reviews are decided by the carriers, so the messages for the peak need writing now.</p>
+        <p class="for anim" data-seat="full"><b>What this means</b>In an ordinary month 4.2% of orders are late. The peaks do the damage, and the date of the next one is known. Black Friday is twelve weeks away.</p>
+      </div>
+    </section>
+
+    <section class="mod" id="m-cliff" data-seats="ops cx full" data-rail="The promise">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Delivery</p>
+        <h2 class="anim">Customers forgive slow. They do not forgive late.</h2>
+        <p class="lede anim">Olist promises a delivery date at checkout, on average 24 days out, and usually beats it. The rating follows that promise far more than it follows speed.</p>
+        <div class="vis anim">
+          <p class="vis-title">Average stars out of five, by how many days before or after the promised date the order arrived</p>
+          <div class="chart" id="c-gap" role="img" aria-label="Column chart of the average rating by arrival time. Orders that arrive early or on the promised date average between 4.1 and 4.3 stars. Orders one to three days late average 3.3, four to seven days late 2.1, and more than a week late 1.7."></div>
+        </div>
+        <p class="for anim" data-seat="ops"><b>For you</b>A longer promise in the peak weeks costs nothing in ratings, and a broken one costs two stars. I tested a formula that sets the promise from recent delivery times and it did no better than yours, so plan by the calendar and lengthen the promise for Rio and the Northeast before the peak.</p>
+        <p class="for anim" data-seat="cx"><b>For you</b>An order that takes three to four weeks and still arrives when promised averages 4.0 stars. What the customer was told matters more than how fast the parcel moved.</p>
+        <p class="for anim" data-seat="full"><b>What this means</b>An order that takes three to four weeks and arrives when promised still averages 4.0 stars. A longer promise in the peak weeks costs nothing in ratings, and a broken one costs two stars.</p>
+      </div>
+    </section>
+
+    <section class="mod" id="m-survey" data-seats="ops cx full" data-rail="When we ask">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Reviews</p>
+        <h2 class="anim">Three late customers in four are asked for a rating while they are still waiting.</h2>
+        <div class="vis bignum anim"><b class="count">74%</b><span>of late orders had the rating request sent before the parcel arrived</span></div>
+        <p class="lede anim">The request goes out when the promised date passes, whether or not the parcel has come. Among orders one to three days late, people asked while waiting gave 2.4 stars, and people asked afterwards gave 3.5.</p>
+        <p class="for anim" data-seat="cx"><b>For you</b>This is the cheapest fix in the whole review. Hold the request until the parcel arrives and send an apology with a new date in its place. Part of the gain is a fairer measurement and not a happier customer, and it still stops you collecting your worst reviews at the worst moment.</p>
+        <p class="for anim" data-seat="ops"><b>For you</b>This is a change of settings and not a logistics project. It needs you and customer experience to agree on the moment an order counts as delivered.</p>
+        <p class="for anim" data-seat="full"><b>What this means</b>Holding the request until the parcel arrives is the cheapest fix in the review. Part of the gain would be a fairer measurement and not a happier customer.</p>
+      </div>
+    </section>
+
+    <section class="mod" id="m-carrier" data-seats="ops sellers full" data-rail="Seller or carrier">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Delivery</p>
+        <h2 class="anim">Most late parcels left the seller on time.</h2>
+        <div class="vis pairnum anim">
+          <div><b class="count">72%</b><span>of late parcels were handed over on time. They then spent a typical 26 days with the carrier, against 7 for a parcel that arrived on time.</span></div>
+          <div><b class="count">81</b><span>sellers cause half of all missed shipping deadlines. That is 3% of the sellers who ship anything.</span></div>
+        </div>
+        <p class="for anim" data-seat="ops full"><b>For you</b>The first conversation is with the carriers and not with the sellers. Ask for more space in the peak weeks on the routes into Rio and the Northeast.</p>
+        <p class="for anim" data-seat="sellers"><b>For you</b>The sellers’ share of the delivery problem is small and concentrated, so a short list of calls would cover most of it. It is not a reason to slow recruiting.</p>
+      </div>
+    </section>
+
+    <section class="mod widevis" id="m-map" data-seats="ops full" data-rail="Across Brazil">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Delivery</p>
+        <h2 class="anim">The further from São Paulo, the longer the wait and the higher the cost.</h2>
+        <p class="lede anim">71% of orders ship from sellers in São Paulo state. Each square is a state, placed roughly where it sits on the map. Choose a measure and point at a state.</p>
+        <div class="vis anim">
+          <div class="seg" id="map-seg" role="group" aria-label="Measure shown on the map"></div>
+          <div class="map-wrap">
+            <div>
+              <div class="tiles" id="tiles"></div>
+              <div class="ramp"><span id="ramp-lo"></span><i></i><span id="ramp-hi"></span></div>
+            </div>
+            <ul class="map-side">
+              <li><b>One route matters most.</b> São Paulo sellers to Rio customers is 8% of orders, and 14% of them arrived late.</li>
+              <li><b>The Northeast waits longest.</b> A typical order takes 17 days, against 7 in São Paulo.</li>
+              <li><b>And pays most.</b> Delivery adds 22% to the price of the goods there, against 14% in São Paulo.</li>
+            </ul>
+          </div>
+        </div>
+        <p class="for anim" data-seat="ops full"><b>For you</b>Rio and the Northeast together are under a quarter of orders and four in ten late deliveries. Those are the places to lengthen the promise and add carrier space first.</p>
+      </div>
+    </section>
+
+    <section class="mod" id="m-tiers" data-seats="ceo sellers full" data-rail="Who carries the sales">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Sellers</p>
+        <h2 class="anim">A few dozen sellers carry the business.</h2>
+        <p class="lede anim">Of 3,029 sellers, the top 31 bring in 26% of sales. The smaller half bring in 3%.</p>
+        <div class="vis anim">
+          <div class="legend"><span><i style="background:var(--grey-mark)"></i>Share of sellers</span><span><i style="background:var(--blue)"></i>Share of sales</span></div>
+          <div class="tiers" id="tiers"></div>
+        </div>
+        <p class="for anim" data-seat="ceo"><b>For you</b>This is a risk that the seller count hides. Losing a handful of these sellers would cost more than a bad month, and today nobody is assigned to them.</p>
+        <p class="for anim" data-seat="sellers full"><b>For you</b>Give the top 155 sellers, who bring in 54% of sales, a named person to call. It is the cheapest insurance on offer.</p>
+      </div>
+    </section>
+
+    <section class="mod" id="m-traction" data-seats="sellers full" data-rail="The first month">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Sellers</p>
+        <h2 class="anim">A seller’s first month shows who will stay.</h2>
+        <p class="lede anim">35% of new sellers made no sale at all in their fourth to sixth months. The ones who start busy almost always last.</p>
+        <div class="vis anim">
+          <p class="vis-title">Share of new sellers still selling in months four to six, by the number of orders in their first thirty days</p>
+          <div class="chart" id="c-trac" role="img" aria-label="Column chart. Of sellers with one order in their first thirty days, 47 percent were still selling in months four to six. With two or three orders, 68 percent. With four to nine, 85 percent. With ten or more, 94 percent."></div>
+        </div>
+        <p class="for anim" data-seat="sellers"><b>For you</b>Today 29% of new sellers reach four orders in their first thirty days. That share is a better target for your team than sign-ups, and you can read it within a month. It is a pattern and not proof, so try it on one month’s new sellers first.</p>
+        <p class="for anim" data-seat="full"><b>What this means</b>This is a pattern and not proof, because good products win early orders and also last longer. It is still the earliest signal there is, and it gives the team that looks after sellers a clear target.</p>
+      </div>
+    </section>
+
+    <section class="mod widevis" id="m-levers" data-seats="ops cx full" data-rail="What a fix is worth">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Try it yourself</p>
+        <h2 class="anim">What would fixing these be worth?</h2>
+        <p class="lede anim">Drag the sliders and watch the share of bad reviews move. The records let me count bad reviews, and they do not let me turn one into lost money, so the result is measured in unhappy customers.</p>
+        <div class="vis anim"><div class="levers" id="levers"></div></div>
+      </div>
+    </section>
+
+    <section class="mod widevis" id="m-score" data-seats="ops sellers full" data-rail="Your own area">
+      <div class="mod-in">
+        <p class="kicker anim"><span class="num"></span>Look it up</p>
+        <h2 class="anim">Find your own state or category.</h2>
+        <p class="lede anim">The same measures for each of Brazil’s 27 states and for the twenty largest product categories. Select a column heading to sort by it.</p>
+        <div class="vis anim">
+          <div class="seg" id="score-seg" role="group" aria-label="Rows shown in the table">
+            <button type="button" data-view="states" aria-pressed="true">By state</button>
+            <button type="button" data-view="categories" aria-pressed="false">By category</button>
+          </div>
+          <div class="scroll"><table id="score"></table></div>
+          <p class="fig-note" id="score-note"></p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- What each seat should do -->
+  <div id="asks" class="pad">
+    <section class="ask" data-seat="ceo">
+      <p class="kicker anim">Your decisions</p>
+      <h2 class="anim">Three things only you can decide.</h2>
+      <ol class="decide">
+        <li class="anim"><b>Pay for the study of where the buyers went, before next year’s plan.</b><p>Ask for visits to listings, the share of visits that end in an order, and prices against competing listings, for each shopping site and category. The gap between spring and summer is R$87 thousand a month, or about R$1.0 million over a year.</p></li>
+        <li class="anim"><b>Change what growth is measured by.</b><p>Replace the number of sellers signed with the number of new sellers who reach four orders in their first month. Today 29% of them do.</p></li>
+        <li class="anim"><b>Approve the Black Friday plan this month.</b><p>A longer delivery promise for Rio and the Northeast in the peak weeks, and extra carrier space on the route from São Paulo to Rio.</p></li>
+      </ol>
+      <div class="questions anim"><p class="kicker">Three questions for your next meeting</p><ul><li>Which shopping sites sent us fewer visitors this summer than in spring?</li><li>Who is responsible for our top 155 sellers?</li><li>What is our target for late deliveries in the last week of November?</li></ul></div>
+    </section>
+    <section class="ask" data-seat="ops">
+      <p class="kicker anim">Your decisions</p>
+      <h2 class="anim">Three things to settle this month.</h2>
+      <ol class="decide">
+        <li class="anim"><b>Agree the peak calendar with the carriers.</b><p>Start with extra space from São Paulo to Rio. If the four bad months had run like ordinary ones, about 2,500 more orders would have arrived on time.</p></li>
+        <li class="anim"><b>Lengthen the promised date for Rio and the Northeast in the peak weeks.</b><p>Do it for orders placed around Black Friday and Christmas, and do it before the peak starts. Customers accept a longer wait far more easily than a broken promise.</p></li>
+        <li class="anim"><b>Hold the rating request until the parcel has arrived.</b><p>Agree with customer experience on the moment an order counts as delivered. That alone would have kept 74% of late customers from being asked while they were still waiting.</p></li>
+      </ol>
+      <div class="questions anim"><p class="kicker">Three questions for your next meeting</p><ul><li>How much space have the carriers committed for the last two weeks of November?</li><li>Which routes get the longer promise, and from what date?</li><li>Who calls the 81 sellers behind half of all missed shipping deadlines?</li></ul></div>
+      <p class="measure anim">You will know it worked if late deliveries to Rio stay under 5% through November and December.</p>
+    </section>
+    <section class="ask" data-seat="sellers">
+      <p class="kicker anim">Your decisions</p>
+      <h2 class="anim">Three changes to how your team works.</h2>
+      <ol class="decide">
+        <li class="anim"><b>Aim the team at sellers who sell.</b><p>Make the target the share of new sellers who reach four orders in their first thirty days. 87% of those sellers are still selling months later, against 57% of the rest.</p></li>
+        <li class="anim"><b>Try it on one month’s new sellers first.</b><p>Give half of next month’s new sellers extra help with their listings and prices, and compare the two halves after ninety days. That test is what would show that the help makes sellers stay.</p></li>
+        <li class="anim"><b>Give the top 155 sellers a named person to call.</b><p>They bring in 54% of sales. Sellers who joined in 2017 now sell R$263 thousand a month less than they did in the spring, and a tenth of that is worth R$26 thousand a month.</p></li>
+      </ol>
+      <div class="questions anim"><p class="kicker">Three questions for your next meeting</p><ul><li>How many of last month’s new sellers reached four orders?</li><li>Which of our top 155 sellers sold less this summer than in spring, and do we know why?</li><li>What do sellers of computer accessories say has changed?</li></ul></div>
+      <p class="measure anim">You will know it worked if more new sellers reach four orders and sales per seller stop falling.</p>
+    </section>
+    <section class="ask" data-seat="cx">
+      <p class="kicker anim">Your decisions</p>
+      <h2 class="anim">Three fixes, cheapest first.</h2>
+      <ol class="decide">
+        <li class="anim"><b>Ask for the rating only after the order has arrived.</b><p>When the promised date passes and the parcel has not come, send an apology with a new date in place of the rating request.</p></li>
+        <li class="anim"><b>Treat an order as delivered when its last parcel arrives.</b><p>Show the customer a date for each parcel. Multi-item orders received about 1,500 more bad reviews than ordinary orders would have.</p></li>
+        <li class="anim"><b>Write the peak-season messages now.</b><p>Work with operations so that customers in Rio and the Northeast are told a longer date before Black Friday, and not an apology after it.</p></li>
+      </ol>
+      <div class="questions anim"><p class="kicker">Three questions for your next meeting</p><ul><li>Can the carriers tell us when each parcel of an order arrives?</li><li>What does a customer see today when the promised date passes?</li><li>What share of multi-item orders got a bad review this month? It has been 25%, against 7.5% for ordinary orders.</li></ul></div>
+      <p class="measure anim">You will know it worked if bad reviews on multi-item orders fall from 25% towards 7.5%.</p>
+    </section>
+
+    <section class="ask" data-seat="full">
+      <p class="kicker anim">Recommendations</p>
+      <h2 class="anim">Four things to do, in the order I would do them.</h2>
+      <div class="recs">
+        <article class="rec anim" id="rec-1">
+          <div class="rec-main"><p class="label">1 · Before 23 November</p><h3>Prepare for Black Friday now.</h3><p>For orders placed around Black Friday and Christmas, promise longer delivery to Rio de Janeiro and the Northeast, book extra carrier space from São Paulo to Rio, and hold the rating request until the parcel has arrived.</p></div>
+          <dl class="rec-side">
+            <div><dt>What it is worth</dt><dd>About 2,500 on-time orders and 1,300 fewer bad reviews, if the four bad months had run like ordinary ones.</dd></div>
+            <div><dt>How we will know</dt><dd>Late deliveries to Rio stay under 5% through November and December.</dd></div>
+            <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>High on the cause, less on how much of it Olist controls.</dd></div>
+          </dl>
+        </article>
+        <article class="rec anim" id="rec-2">
+          <div class="rec-main"><p class="label">2 · This quarter</p><h3>Count the sellers who sell.</h3><p>Replace the target for sellers signed with one for new sellers who reach four orders in their first thirty days. Give the 155 sellers who bring in 54% of sales a named person to call.</p></div>
+          <dl class="rec-side">
+            <div><dt>What it is worth</dt><dd>Sellers who joined in 2017 now sell R$263 thousand a month less than in spring. A tenth of that is R$26 thousand a month.</dd></div>
+            <div><dt>How we will know</dt><dd>More new sellers reach four orders, and sales per seller stop falling.</dd></div>
+            <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>Medium. A test on one month’s new sellers would settle it.</dd></div>
+          </dl>
+        </article>
+        <article class="rec anim" id="rec-3">
+          <div class="rec-main"><p class="label">3 · Before next year’s plan</p><h3>Find out where the buyers went.</h3><p>The same sellers sold 15% less in summer than in spring. The reason is in data the company holds and did not publish: visits to listings, the share of visits that end in an order, and prices against competing listings.</p></div>
+          <dl class="rec-side">
+            <div><dt>What it is worth</dt><dd>The gap is R$87 thousand a month, or about R$1.0 million over a year if it lasts.</dd></div>
+            <div><dt>How we will know</dt><dd>Leadership can say whether it was fewer visits, fewer visits turning into orders, or a seasonal dip.</dd></div>
+            <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>High that this is the right question. The answer is unknown.</dd></div>
+          </dl>
+        </article>
+        <article class="rec anim" id="rec-4">
+          <div class="rec-main"><p class="label">4 · Next quarter</p><h3>Fix orders with more than one item.</h3><p>Track each parcel separately, show the customer a date for each, and ask for the rating only after the last one arrives.</p></div>
+          <dl class="rec-side">
+            <div><dt>What it is worth</dt><dd>About 1,500 bad reviews more than ordinary orders would have received, across 9,008 orders.</dd></div>
+            <div><dt>How we will know</dt><dd>Bad reviews on these orders fall from 25% towards 7.5%.</dd></div>
+            <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>Medium. The comments are clear, and the records cannot confirm when each parcel arrived.</dd></div>
+          </dl>
+        </article>
+      </div>
+      <p class="measure anim">Three things I considered and would not do: a loyalty programme, because only about 4 customers in a hundred come back whatever happens; a new formula for the promised date, because the one I tested did no better than Olist’s own; and a project on out-of-stock orders, because they have already fallen from 1.0% of orders to 0.2%.</p>
+    </section>
+
+    <div class="next anim">
+      <p class="kicker">Where next</p>
+      <div class="next-row">
+        <button type="button" class="cta" data-pick="full" data-hide="full">Read the full analysis</button>
+        <button type="button" class="cta ghost" data-top>Take another seat</button>
+        <button type="button" class="cta ghost" data-present>Present it as slides</button>
       </div>
     </div>
-  </section>
-
-  <!-- 6 Recommendations -->
-  <section class="part pad" id="actions" aria-labelledby="act-title">
-    <div class="col part-head">
-      <p class="label"><span>6</span>Recommendations</p>
-      <h2 id="act-title">Four things to do, in the order I would do them.</h2>
-    </div>
-    <div class="wide play anim">
-      <p class="label">Try it yourself</p>
-      <h3>What would fixing these be worth?</h3>
-      <p>Drag the sliders and watch the share of bad reviews move. One honest limit: the records let me count bad reviews, and they do not let me turn one into lost money, so the result is measured in unhappy customers.</p>
-      <div class="levers" id="levers"></div>
-    </div>
-
-    <div class="wide recs">
-      <article class="rec anim" id="rec-1">
-        <div class="rec-main">
-          <p class="label">1 · Before 23 November</p>
-          <h3>Prepare for Black Friday now.</h3>
-          <p>Last year’s peak and the disruption after it produced more than half of all late deliveries. This year’s dates are known. For orders placed around Black Friday and Christmas, promise longer delivery to Rio de Janeiro and the Northeast, book extra carrier space from São Paulo to Rio, and hold the rating request until the parcel has arrived.</p>
-        </div>
-        <dl class="rec-side">
-          <div><dt>First step</dt><dd>Agree the peak calendar and the longer promise with the carriers this month.</dd></div>
-          <div><dt>What it is worth</dt><dd>About 2,500 on-time orders and 1,300 fewer bad reviews, if the four bad months had run like ordinary ones.</dd></div>
-          <div><dt>How we will know</dt><dd>Late deliveries to Rio stay under 5% through November and December.</dd></div>
-          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>High on the cause, less on how much of it Olist controls.</dd></div>
-        </dl>
-      </article>
-
-      <article class="rec anim" id="rec-2">
-        <div class="rec-main">
-          <p class="label">2 · This quarter</p>
-          <h3>Count the sellers who sell.</h3>
-          <p>Replace the target for sellers signed with one for new sellers who reach four orders in their first thirty days. Today 29% do, and 87% of them are still selling months later, against 57% of the rest. Separately, give the 155 sellers who bring in 54% of sales a named person to call.</p>
-        </div>
-        <dl class="rec-side">
-          <div><dt>First step</dt><dd>Give half of next month’s new sellers extra help with listings and prices, and compare the two halves after ninety days.</dd></div>
-          <div><dt>What it is worth</dt><dd>Sellers who joined in 2017 now sell R$263 thousand a month less than in spring. A tenth of that is R$26 thousand a month.</dd></div>
-          <div><dt>How we will know</dt><dd>More new sellers reach four orders, and sales per seller stop falling.</dd></div>
-          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>Medium. The test is what would show that help makes sellers stay.</dd></div>
-        </dl>
-      </article>
-
-      <article class="rec anim" id="rec-3">
-        <div class="rec-main">
-          <p class="label">3 · Before next year’s plan</p>
-          <h3>Find out where the buyers went.</h3>
-          <p>The most important number here is that the same sellers sold 15% less in summer than in spring. I can show that it happened and not why. The answer is in data the company holds and did not publish: visits to listings, the share of visits that end in an order, and prices against competing listings, for each shopping site and category.</p>
-        </div>
-        <dl class="rec-side">
-          <div><dt>First step</dt><dd>Start with computer accessories and sports and leisure, where sales fell most.</dd></div>
-          <div><dt>What it is worth</dt><dd>The gap is R$87 thousand a month, or about R$1.0 million over a year if it lasts.</dd></div>
-          <div><dt>How we will know</dt><dd>Leadership can say whether it was fewer visits, fewer visits turning into orders, or a seasonal dip.</dd></div>
-          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span>High that this is the right question. The answer is unknown.</dd></div>
-        </dl>
-      </article>
-
-      <article class="rec anim" id="rec-4">
-        <div class="rec-main">
-          <p class="label">4 · Next quarter</p>
-          <h3>Fix orders with more than one item.</h3>
-          <p>One order in eleven holds more than one item, and those orders are rated badly three times as often as ordinary ones. Track each parcel separately, show the customer a date for each, and ask for the rating only after the last one arrives.</p>
-        </div>
-        <dl class="rec-side">
-          <div><dt>First step</dt><dd>Check whether the carriers already track each parcel, and read a hundred of these complaints with the support team.</dd></div>
-          <div><dt>What it is worth</dt><dd>About 1,500 bad reviews more than ordinary orders would have received, across 9,008 orders.</dd></div>
-          <div><dt>How we will know</dt><dd>Bad reviews on these orders fall from 25% towards 7.5%.</dd></div>
-          <div><dt>Confidence</dt><dd><span class="conf" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>Medium. The comments are clear, and the records cannot confirm when each parcel arrived.</dd></div>
-        </dl>
-      </article>
-    </div>
-
-    <div class="col"><h3>Three things I considered and would not do.</h3></div>
-    <div class="wide stat-row nots anim">
-      <div class="stat"><p><strong>A loyalty programme.</strong> About 4 customers in a hundred come back, and a perfect first order moves that by less than a point.</p></div>
-      <div class="stat"><p><strong>A new formula for the promised date.</strong> The simple version I tested did no better than the promise Olist already makes.</p></div>
-      <div class="stat"><p><strong>A project on out-of-stock orders.</strong> They have already fallen from 1.0% of orders to 0.2%.</p></div>
-    </div>
-  </section>
-
-  <!-- Scorecards -->
-  <section class="part pad" id="scorecard" aria-labelledby="score-title">
-    <div class="col part-head">
-      <p class="label">For the people who run a region or a category</p>
-      <h2 id="score-title">Look up your own area.</h2>
-    </div>
-    <div class="col">
-      <p>The same measures for each of Brazil’s 27 states and for the twenty largest product categories. Select any column heading to sort by it.</p>
-    </div>
-    <div class="fig wide anim">
-      <div class="card-tools">
-        <div class="seg" id="score-seg" role="group" aria-label="Rows shown in the table">
-          <button type="button" data-view="states" aria-pressed="true">By state</button>
-          <button type="button" data-view="categories" aria-pressed="false">By category</button>
-        </div>
-        <p>Delivered orders, January 2017 to August 2018</p>
-      </div>
-      <div class="scroll"><table id="score"></table></div>
-      <p class="fig-note" id="score-note"></p>
-    </div>
-  </section>
+  </div>
 
   <!-- Notes -->
-  <section class="part pad notes" id="notes" aria-labelledby="notes-title">
-    <div class="col part-head">
-      <p class="label">Notes</p>
-      <h2 id="notes-title">The fine print.</h2>
-    </div>
-    <div class="col">
+  <section class="pad notes" id="notes" aria-labelledby="notes-title">
+    <div class="wrap">
+      <p class="kicker">The fine print</p>
+      <h2 id="notes-title">What this is, and what it cannot tell you.</h2>
+      <details class="acc">
+        <summary>What is this, and whose data is it?</summary>
+        <p>Olist is a Brazilian company that lets small merchants sell on the country’s large shopping sites through one shared storefront, and it arranges the delivery. In 2018 it published the records of about 100,000 of its orders. I wrote this the way I would for its leadership team at the start of September 2018, which is where the data ends. I have never worked for Olist, so everything here comes from that public file. Amounts are in Brazilian reais, and one real was worth about 27 US cents in 2018.</p>
+      </details>
       <details class="acc">
         <summary>What the measures mean</summary>
         <dl>
-          <dt>Sales</dt><dd>The price of the goods in an order, without the delivery charge, for every order that was not cancelled or found to be out of stock. Olist’s own income is a commission and a fee taken from these sales, and the records do not show it.</dd>
+          <dt>Sales</dt><dd>The price of the goods in an order, without the delivery charge, for every order that was not cancelled or found to be out of stock.</dd>
           <dt>Active seller</dt><dd>A seller who made at least one sale in the month.</dd>
           <dt>Typical delivery time</dt><dd>The middle value, so that half of orders arrived sooner and half later, counted from purchase to delivery.</dd>
           <dt>Late</dt><dd>Delivered on a later day than the date the customer was shown at checkout.</dd>
@@ -937,18 +840,18 @@ details.acc > *:last-child { margin-bottom: 18px; }
       <details class="acc">
         <summary>What the data cannot tell us</summary>
         <ul>
-          <li><b>The file may not hold every order.</b> Olist published about 100,000 orders and did not say how they were chosen. I have treated the file as the whole business. If orders were left out, the totals here are too low and repeat purchases are undercounted. Rates measured inside each order, such as the share that arrived late, would not be affected.</li>
-          <li><b>The first and last months are incomplete,</b> so the review covers January 2017 to August 2018.</li>
+          <li><b>The file may not hold every order.</b> Olist did not say how the published orders were chosen. I have treated the file as the whole business. If orders were left out, the totals here are too low and repeat purchases are undercounted. Rates measured inside each order, such as the share that arrived late, would not be affected.</li>
           <li><b>Nothing is recorded before a purchase.</b> Visits, searches, competitors’ prices and advertising are all missing, which is why the review can show that demand fell and cannot explain it.</li>
-          <li><b>There is one delivery date for each order,</b> so for an order that came in several parcels the records cannot show when each one arrived.</li>
-          <li><b>These are patterns and not experiments.</b> Late orders get worse ratings and busy new sellers stay longer, but the records cannot prove that changing one would change the other. Where it matters I have proposed a test.</li>
-          <li><b>The data is old.</b> It ends in 2018. I chose it because it is a rare public record of a real company’s orders, sellers, deliveries and ratings together, and this review does not describe Olist as it is today.</li>
+          <li><b>There is one delivery date for each order,</b> so the records cannot show when each parcel of an order arrived.</li>
+          <li><b>These are patterns and not experiments.</b> Where it matters I have proposed a test.</li>
+          <li><b>The data is old.</b> It ends in 2018, and this review does not describe Olist as it is today.</li>
         </ul>
       </details>
       <details class="acc">
         <summary>How this was built</summary>
-        <p>The public file is nine linked tables of orders, items, payments, ratings, customers, sellers and products. I loaded them into a database, wrote SQL to build one table with a row for each order, and a Python script computes every figure in this report from that table. The page is filled in from the script’s results when it is built, so no number here was typed by hand. The SQL and the scripts are <a href="https://github.com/RumitOsu/more-sellers-same-sales" target="_blank" rel="noopener noreferrer">on GitHub</a>.</p>
-        <p>The data is the <a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank" rel="noopener noreferrer">Brazilian E-Commerce Public Dataset by Olist</a>, which the company shares under a Creative Commons licence for non-commercial use (CC BY-NC-SA 4.0).</p>
+        <p>The public file is nine linked tables of orders, items, payments, ratings, customers, sellers and products. I loaded them into a database, wrote SQL to build one table with a row for each order, and a Python script computes every figure on this page from that table. The page is filled in from the script’s results when it is built, so no number here was typed by hand. The SQL and the scripts are <a href="https://github.com/RumitOsu/more-sellers-same-sales" target="_blank" rel="noopener noreferrer">on GitHub</a>.</p>
+        <p>The data is the <a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank" rel="noopener noreferrer">Brazilian E-Commerce Public Dataset by Olist</a>, shared under a Creative Commons licence for non-commercial use (CC BY-NC-SA 4.0).</p>
+        <details class="nums"><summary>Show every month’s numbers</summary><div class="scroll" id="t-monthly"></div></details>
       </details>
     </div>
   </section>
@@ -1023,7 +926,7 @@ const DATA = {"monthly":[{"month":"2017-01","orders":787,"sales":120098.27,"aov"
 (function () {
   'use strict';
   const NS = 'http://www.w3.org/2000/svg';
-  const C = { blue: '#2a78d6', orange: '#eb6834', aqua: '#1baf7a', ink: '#121a26', ink2: '#39424f', muted: '#6a707a', grid: '#e7e5de', axis: '#c9c6bb', grey: '#b9bcc2', surface: '#ffffff' };
+  const C = { blue: '#4c94ea', orange: '#e8683a', aqua: '#5fd0c5', ink: '#f2f6fc', ink2: '#c5d1e3', muted: '#8a9fbc', grid: '#1c3252', axis: '#3a5682', grey: '#566c8c', surface: '#0a1626' };
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const monthName = (m) => MONTHS_FULL[+m.slice(5) - 1] + ' ' + m.slice(0, 4);
@@ -1223,6 +1126,7 @@ const DATA = {"monthly":[{"month":"2017-01","orders":787,"sales":120098.27,"aov"
   /* 3. The five kinds of order */
   (function () {
     const node = document.getElementById('kinds');
+    if (!node) return;
     const NAMES = {
       never_arrived: ['Never arrived', 'Cancelled, out of stock, or shipped and not delivered'],
       late: ['Arrived after the promised date', ''],
@@ -1263,7 +1167,7 @@ const DATA = {"monthly":[{"month":"2017-01","orders":787,"sales":120098.27,"aov"
     const step = iw / (M.length - 1);
     [['2017-11', '2017-12', narrow ? 'Black Friday' : 'Black Friday and Christmas'], ['2018-02', '2018-03', narrow ? 'Feb and Mar' : 'February and March']].forEach(([a, b, label]) => {
       const i0 = months.indexOf(a), i1 = months.indexOf(b);
-      el('rect', { x: x(i0) - step / 2, y: m.t, width: step * (i1 - i0 + 1), height: ih, fill: '#f1efe8' }, s);
+      el('rect', { x: x(i0) - step / 2, y: m.t, width: step * (i1 - i0 + 1), height: ih, fill: 'rgba(255,255,255,.06)' }, s);
       el('text', { x: (x(i0) + x(i1)) / 2, y: m.t - 10, 'text-anchor': 'middle', 'font-size': 12.5, 'font-weight': 700, fill: C.ink2 }, s, label);
     });
     yAxis(s, [0, 0.1, 0.2, 0.3, 0.4], y, m.l, w - m.r, (t) => f.pct(t));
@@ -1325,7 +1229,7 @@ const DATA = {"monthly":[{"month":"2017-01","orders":787,"sales":120098.27,"aov"
       ['sales_share', 'Share of sales', (v) => f.pct(v, v < 0.095 ? 1 : 0), 'of all sales'],
     ];
     const seg = document.getElementById('map-seg'), tiles = document.getElementById('tiles');
-    const lo = [205, 226, 251], mid = [57, 135, 229], hi = [13, 54, 107];
+    const lo = [22, 50, 88], mid = [57, 135, 229], hi = [205, 226, 251];
     const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
     const colour = (t) => { const c = t < 0.5 ? mix(lo, mid, t * 2) : mix(mid, hi, (t - 0.5) * 2); return `rgb(${c[0]},${c[1]},${c[2]})`; };
     const byKey = {}; DATA.states.forEach((d) => { byKey[d.key] = d; });
@@ -1346,7 +1250,7 @@ const DATA = {"monthly":[{"month":"2017-01","orders":787,"sales":120098.27,"aov"
       Object.keys(nodes).forEach((k) => {
         const v = byKey[k][key], t = Math.max(0, Math.min(1, (v - min) / (max - min)));
         nodes[k].style.background = colour(t);
-        nodes[k].style.color = t > 0.42 ? '#fff' : '#0b1f3a';
+        nodes[k].style.color = t > 0.62 ? '#0b1f3a' : '#fff';
         nodes[k].lastChild.textContent = fmt(v);
         nodes[k].setAttribute('aria-label', `${byKey[k].name}: ${fmt(v)} ${unit}`);
       });
@@ -1811,6 +1715,56 @@ const DATA = {"monthly":[{"month":"2017-01","orders":787,"sales":120098.27,"aov"
     document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && !deck.hidden) close(); });
   })();
 
+  /* ---------- Seats: which chapters show, in what order, and the rail that follows them ---------- */
+  (function () {
+    const story = document.getElementById('story');
+    if (!story) return;
+    const ORDER = {
+      ceo: ['guess', 'stall', 'bridge', 'customers', 'tiers', 'late'],
+      ops: ['late', 'map', 'carrier', 'cliff', 'survey', 'never', 'levers', 'score'],
+      sellers: ['stall', 'bridge', 'traction', 'tiers', 'carrier', 'score'],
+      cx: ['dots', 'multi', 'cliff', 'survey', 'late', 'customers', 'levers'],
+      full: ['guess', 'stall', 'bridge', 'customers', 'dots', 'never', 'multi', 'late', 'cliff', 'survey', 'carrier', 'map', 'tiers', 'traction', 'levers', 'score'],
+    };
+    const mods = {};
+    story.querySelectorAll('.mod').forEach((m) => { mods[m.id.slice(2)] = m; });
+    const select = document.getElementById('seat-select'), rail = document.getElementById('rail');
+    let railIO = null;
+    function buildRail(keys) {
+      rail.textContent = '';
+      if (railIO) railIO.disconnect();
+      const items = keys.map((k) => {
+        const a = h('a', '', rail); a.href = '#m-' + k;
+        h('span', '', a, mods[k].dataset.rail);
+        a.addEventListener('click', (e) => { e.preventDefault(); mods[k].scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' }); });
+        return a;
+      });
+      if (!('IntersectionObserver' in window)) return;
+      railIO = new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (e.isIntersecting) items.forEach((a, i) => a.classList.toggle('on', mods[keys[i]] === e.target));
+      }), { rootMargin: '-45% 0px -50% 0px' });
+      keys.forEach((k) => railIO.observe(mods[k]));
+    }
+    function setSeat(seat, scroll) {
+      if (!ORDER[seat]) seat = 'full';
+      document.body.dataset.seat = seat;
+      ORDER[seat].forEach((k) => story.appendChild(mods[k]));
+      select.value = seat;
+      document.querySelectorAll('.seat').forEach((b) => b.setAttribute('aria-pressed', b.dataset.pick === seat));
+      buildRail(ORDER[seat]);
+      const view = document.querySelector('#score-seg [data-view="' + (seat === 'sellers' ? 'categories' : 'states') + '"]');
+      if (view && view.getAttribute('aria-pressed') !== 'true') view.click();
+      try { history.replaceState(null, '', '#seat=' + seat); } catch (e) { /* a file opened from disk may refuse this */ }
+      if (scroll) document.getElementById('brief').scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+    }
+    document.querySelectorAll('[data-pick]').forEach((b) => b.addEventListener('click', () => setSeat(b.dataset.pick, true)));
+    select.addEventListener('change', () => setSeat(select.value, true));
+    document.querySelectorAll('[data-top]').forEach((b) => b.addEventListener('click', () => document.getElementById('seats').scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'center' })));
+    const fromLink = (location.hash.match(/seat=(\w+)/) || [])[1];
+    setSeat(fromLink || 'full', false);
+    window.addEventListener('scroll', () => { rail.classList.toggle('show', window.scrollY > window.innerHeight * 0.8); }, { passive: true });
+  })();
+
   /* Numbers count up, things fade in, and a thin bar shows how far down the page you are */
   function countUp(node) {
     const mt = node.textContent.match(/^(\D*?)(\d[\d,]*\.?\d*)(.*)$/);
@@ -1851,7 +1805,7 @@ const DATA = {"monthly":[{"month":"2017-01","orders":787,"sales":120098.27,"aov"
   }, { passive: true });
 
   /* Top bar: mark the section in view, and print */
-  document.getElementById('print').addEventListener('click', () => window.print());
+  const printButton = document.getElementById('print'); if (printButton) printButton.addEventListener('click', () => window.print());
   const links = [...document.querySelectorAll('.bar nav a')];
   const targets = links.map((a) => document.querySelector(a.getAttribute('href')));
   if ('IntersectionObserver' in window) {
